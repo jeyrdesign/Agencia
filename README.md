@@ -36,3 +36,32 @@ Duplica el bloque para cada marca adicional. Utiliza logos cuyo uso tengas autor
 
 ## Paquetes
 En la portada, los paquetes están ocultos hasta que haces clic en el nombre del servicio. Edita los textos y precios dentro de los elementos `<article class="package">` de `index.html`. Los precios de fotografía ($65, $85 y $65) son referencias previas y deben confirmarse antes de publicar.
+
+
+## Nueva estructura del portafolio fotográfico
+
+Al entrar en **Fotografía**, el visitante encontrará seis subcategorías independientes:
+
+1. Fotografía deportiva — `fotografia-deportiva.html`
+2. Sesiones en estudio — `fotografia-estudio.html`
+3. Sesiones de XV años — `fotografia-xv.html`
+4. Coberturas fotográficas — `fotografia-coberturas.html`
+5. Fotografía comercial — `fotografia-comercial.html`
+6. Sesiones en exteriores — `fotografia-exteriores.html`
+
+Cada categoría tiene su propia galería y carpeta. Sube tus fotografías reales usando estos nombres:
+
+| Categoría | Carpeta | Archivos |
+|---|---|---|
+| Deportiva | `assets/portfolio/fotografia/deportiva/` | `portada.jpg`, `partido-01.jpg`, `accion-01.jpg`, `equipo-01.jpg`, `entrenamiento-01.jpg`, `evento-01.jpg`, `detalle-01.jpg` |
+| Estudio | `assets/portfolio/fotografia/estudio/` | `portada.jpg`, `retrato-01.jpg`, `editorial-01.jpg`, `concepto-01.jpg`, `perfil-01.jpg`, `detalle-01.jpg`, `sesion-01.jpg` |
+| XV años | `assets/portfolio/fotografia/xv-anos/` | `portada.jpg`, `retrato-01.jpg`, `vestuario-01.jpg`, `exteriores-01.jpg`, `detalle-01.jpg`, `editorial-01.jpg`, `sesion-01.jpg` |
+| Coberturas | `assets/portfolio/fotografia/coberturas/` | `portada.jpg`, `evento-01.jpg`, `protagonistas-01.jpg`, `ambiente-01.jpg`, `detalles-01.jpg`, `accion-01.jpg`, `momentos-01.jpg` |
+| Comercial | `assets/portfolio/fotografia/comercial/` | `portada.jpg`, `producto-01.jpg`, `marca-01.jpg`, `espacio-01.jpg`, `detalle-01.jpg`, `campana-01.jpg`, `catalogo-01.jpg` |
+| Exteriores | `assets/portfolio/fotografia/exteriores/` | `portada.jpg`, `retrato-01.jpg`, `pareja-01.jpg`, `familia-01.jpg`, `locacion-01.jpg`, `lifestyle-01.jpg`, `sesion-01.jpg` |
+
+Puedes sustituir los archivos por tus fotografías conservando los nombres. Si quieres más imágenes, duplica una etiqueta `<figure>` en el HTML de la categoría y cambia la ruta y el texto alternativo.
+
+## Actualización de tipografía y estilo
+
+La web ahora utiliza **Outfit** para titulares y **Manrope** para textos y navegación. El lenguaje visual mantiene la identidad oscura con azul eléctrico y celeste, pero incorpora más aire, tarjetas redondeadas, contrastes suaves y animaciones discretas para transmitir frescura y modernidad.
