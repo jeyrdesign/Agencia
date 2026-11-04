@@ -1,5 +1,5 @@
 // Cambia estos datos por los contactos oficiales de JEYR DESIGN.
-const JEYR={whatsapp:"593XXXXXXXXX",instagram:"TU_USUARIO"};
+const JEYR={whatsapp:"593980478748",instagram:"TU_USUARIO"};
 const wa=m=>`https://wa.me/${JEYR.whatsapp}?text=${encodeURIComponent(m)}`;
 document.querySelectorAll(".whatsapp-link").forEach(a=>{a.href=wa(a.dataset.message||"Hola, quiero información sobre JEYR DESIGN.");a.target="_blank";a.rel="noopener";});
 document.querySelectorAll("[data-whatsapp-general]").forEach(a=>{a.href=wa("Hola, quiero información sobre los servicios de JEYR DESIGN.");a.target="_blank";a.rel="noopener";});

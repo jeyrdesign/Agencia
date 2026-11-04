@@ -76,3 +76,16 @@ Eslogan oficial: **«Los mejores, con los mejores»**. Está incorporado en la p
 ## Tarjetas de fotografía
 
 Las seis subcategorías se presentan como tarjetas visuales con imagen de fondo, degradado para mejorar la lectura, indicador de categoría y microinteracciones. Para que las tarjetas luzcan completas, reemplaza cada `portada.jpg` indicado en la sección anterior por una fotografía propia de esa categoría.
+
+
+## Icono de la página (favicon)
+
+El isotipo de JEYR DESIGN ya está configurado como icono de pestaña del navegador en todas las páginas. Se incluyen `favicon.svg`, `favicon.ico`, versiones PNG y `apple-touch-icon.png` para dispositivos móviles. Si GitHub Pages conserva el icono anterior por caché, recarga el sitio con Ctrl + F5 o prueba en una ventana privada.
+
+
+## Actualización v7 — Hero holográfico
+- La portada mantiene el fondo oscuro y sus degradados originales.
+- El contenido se distribuye en dos columnas: texto a la izquierda y panel holográfico a la derecha.
+- Se conserva el degradado azul-cian del botón «Explorar portafolio».
+- El panel muestra datos descriptivos del sitio: 4 áreas creativas, 6 líneas fotográficas y ubicación en Babahoyo.
+- El panel se adapta a móviles y reduce movimiento si el dispositivo tiene esa preferencia configurada.
