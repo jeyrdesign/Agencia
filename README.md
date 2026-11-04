@@ -65,3 +65,14 @@ Puedes sustituir los archivos por tus fotografías conservando los nombres. Si q
 ## Actualización de tipografía y estilo
 
 La web ahora utiliza **Outfit** para titulares y **Manrope** para textos y navegación. El lenguaje visual mantiene la identidad oscura con azul eléctrico y celeste, pero incorpora más aire, tarjetas redondeadas, contrastes suaves y animaciones discretas para transmitir frescura y modernidad.
+
+
+## Logo oficial y eslogan
+
+El logo vectorial oficial está integrado en `assets/brand/jeyr-design.svg` y se muestra en el encabezado y pie de página de todas las secciones. El archivo se ha ajustado en su área visible para evitar márgenes vacíos del lienzo original. Como el SVG original es negro y el sitio tiene fondo oscuro, se muestra en blanco mediante un filtro CSS, sin modificar el archivo fuente ni sus formas.
+
+Eslogan oficial: **«Los mejores, con los mejores»**. Está incorporado en la portada y en los pies de página.
+
+## Tarjetas de fotografía
+
+Las seis subcategorías se presentan como tarjetas visuales con imagen de fondo, degradado para mejorar la lectura, indicador de categoría y microinteracciones. Para que las tarjetas luzcan completas, reemplaza cada `portada.jpg` indicado en la sección anterior por una fotografía propia de esa categoría.

@@ -57,3 +57,27 @@ nav{gap:12px;flex-wrap:wrap;justify-content:flex-end;font-size:10px}
 .photo-subcategories,.photo-detail-grid{grid-template-columns:1fr}.photo-subcategory{min-height:250px}
 .gallery{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:210px}.page-hero{padding:70px 6vw 50px}
 }
+
+
+/* Logo oficial y eslogan de marca */
+.brand{min-width:0}
+.brand-logo{display:block;width:178px;height:54px;object-fit:contain;filter:brightness(0) invert(1);transition:opacity .2s ease,transform .2s ease}
+.brand:hover .brand-logo{opacity:.86;transform:translateY(-1px)}
+.brand-slogan{margin:0 0 17px;color:#c7ddf7;font-size:11px;font-weight:800;letter-spacing:3px}
+.footer-slogan{color:#c7ddf7;font-size:11px;font-weight:700;letter-spacing:.04em}
+.footer .brand-logo{width:158px;height:48px}
+
+/* Tarjetas fotográficas: más editoriales, visuales y consistentes */
+.photo-subcategories{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.photo-subcategory{min-height:325px;padding:27px;border-radius:22px;background:linear-gradient(145deg,#14243a,#0b1422);border:1px solid #a9c9ff27;box-shadow:0 14px 40px #00000018;isolation:isolate}
+.photo-subcategory:before{background:linear-gradient(180deg,#06101a18 0%,#06101a12 30%,#050912e8 100%),var(--image) center/cover;transform:scale(1.001)}
+.photo-subcategory:after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 85% 15%,#48b8ff24,transparent 45%);opacity:.75;pointer-events:none}
+.photo-subcategory:hover{transform:translateY(-7px);border-color:#72dfff9c;box-shadow:0 22px 55px #00000055,0 0 0 1px #72dfff20}
+.photo-subcategory .photo-index{top:19px;left:20px;padding:8px 11px;border:1px solid #d5eaff38;border-radius:999px;background:#06101a88;backdrop-filter:blur(10px);font-size:9px;font-weight:800;letter-spacing:1.7px}
+.photo-subcategory h3{font-size:clamp(21px,2vw,27px);line-height:1.12;max-width:85%;margin-bottom:9px}
+.photo-subcategory p{max-width:88%;font-size:12px;color:#d3deec;line-height:1.7}
+.photo-subcategory .photo-arrow{right:20px;bottom:22px;width:39px;height:39px;display:grid;place-items:center;border:1px solid #72dfff75;border-radius:50%;background:#071321a8;transition:transform .2s,background .2s}
+.photo-subcategory:hover .photo-arrow{transform:translate(3px,-3px);background:#1769ff}
+.photo-subcategory:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+@media(max-width:900px){.photo-subcategories{grid-template-columns:repeat(2,minmax(0,1fr))}.brand-logo{width:158px}}
+@media(max-width:600px){.photo-subcategories{grid-template-columns:1fr;gap:14px}.photo-subcategory{min-height:270px;padding:23px}.brand-logo{width:140px;height:46px}.brand-slogan{font-size:9px;letter-spacing:2px}.footer-slogan{width:100%}}
