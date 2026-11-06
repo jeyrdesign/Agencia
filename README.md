@@ -89,3 +89,47 @@ El isotipo de JEYR DESIGN ya está configurado como icono de pestaña del navega
 - Se conserva el degradado azul-cian del botón «Explorar portafolio».
 - El panel muestra datos descriptivos del sitio: 4 áreas creativas, 6 líneas fotográficas y ubicación en Babahoyo.
 - El panel se adapta a móviles y reduce movimiento si el dispositivo tiene esa preferencia configurada.
+
+
+## Actualización v8 — Corrección de visualización del holograma
+- Se conserva el fondo original de la portada; no se reemplaza por otro degradado.
+- Los estilos críticos del panel holográfico también están incluidos en el HTML para evitar que una copia antigua de CSS lo muestre como texto simple.
+- La hoja externa ahora usa `css/style.css?v=8` para forzar una nueva carga en navegador/CDN.
+- El panel aparece a la derecha en escritorio y se acomoda debajo del texto en móviles.
+- Se mantiene el degradado azul-cian del botón «Explorar portafolio».
+
+
+## Versión 9 — Adaptación PC y móvil
+- Portada con texto y holograma en dos columnas en pantallas amplias.
+- En tablet y móvil, el holograma pasa debajo del texto y conserva su tarjeta y estadísticas sin desbordarse.
+- Menú móvil desplegable con botón accesible; se cierra al navegar o pulsar Escape.
+- Se ajustaron tarjetas, galerías, paquetes, encabezado y pie de página para pantallas pequeñas.
+- Se conserva el fondo oscuro original, el degradado del botón, el logo, favicon y WhatsApp oficial.
+- La hoja CSS se carga con versión `v=9` para evitar caché antigua.
+
+
+## Galerías fotográficas automáticas (sin editar código)
+
+Las seis galerías de fotografía cargan automáticamente las imágenes numeradas desde su carpeta. Solo debes subir los archivos con numeración consecutiva:
+
+- `01.jpg`
+- `02.jpg`
+- `03.jpg`
+- `04.jpg`
+
+También se admiten las extensiones `.jpeg`, `.png` y `.webp`. Puedes mezclar formatos, pero conserva la numeración continua y usa dos dígitos (`01`, `02`, ... `09`, `10`, etc.). El sistema admite hasta 99 fotografías por categoría y se detiene al encontrar el primer número que no exista. No dejes huecos en la secuencia.
+
+| Categoría | Carpeta donde subir las fotos |
+|---|---|
+| Fotografía deportiva | `assets/portfolio/fotografia/deportiva/` |
+| Sesiones en estudio | `assets/portfolio/fotografia/estudio/` |
+| Sesiones de XV años | `assets/portfolio/fotografia/xv-anos/` |
+| Coberturas fotográficas | `assets/portfolio/fotografia/coberturas/` |
+| Fotografía comercial | `assets/portfolio/fotografia/comercial/` |
+| Sesiones en exteriores | `assets/portfolio/fotografia/exteriores/` |
+
+### Imagen de portada de cada tarjeta
+
+Para la tarjeta de cada categoría en la página principal de Fotografía, conserva una imagen independiente llamada exactamente `portada.jpg` dentro de la carpeta de esa categoría. Ejemplo: `assets/portfolio/fotografia/deportiva/portada.jpg`. La portada no forma parte de la secuencia de la galería.
+
+**Importante:** sube las fotografías a la carpeta correcta y conserva el nombre exacto. No necesitas modificar HTML, CSS ni JavaScript al añadir o reemplazar fotografías. GitHub Pages es un alojamiento estático; por eso el cargador busca los nombres numerados en lugar de intentar leer el listado de archivos de la carpeta.

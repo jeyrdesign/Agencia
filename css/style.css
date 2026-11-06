@@ -83,10 +83,7 @@ nav{gap:12px;flex-wrap:wrap;justify-content:flex-end;font-size:10px}
 @media(max-width:600px){.photo-subcategories{grid-template-columns:1fr;gap:14px}.photo-subcategory{min-height:270px;padding:23px}.brand-logo{width:140px;height:46px}.brand-slogan{font-size:9px;letter-spacing:2px}.footer-slogan{width:100%}}
 
 
-/* HERO HOLOGRÁFICO — conserva el fondo original y suma profundidad al lado derecho */
-.hero{
-  background:radial-gradient(ellipse at 78% 34%,#1c4e9160,transparent 38%),radial-gradient(ellipse at 92% 78%,#0a526055,transparent 28%);
-}
+/* HERO HOLOGRÁFICO — el fondo base original de .hero se conserva sin cambios */
 .hero-layout{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr);align-items:center;gap:clamp(28px,5vw,76px);max-width:1500px;margin:0 auto}
 .hero-content{position:relative;z-index:2;min-width:0}
 .hero-content h1{max-width:760px}
@@ -117,3 +114,70 @@ nav{gap:12px;flex-wrap:wrap;justify-content:flex-end;font-size:10px}
 @media(max-width:760px){.hero{padding-top:85px}.hero-layout{grid-template-columns:1fr;gap:35px}.hero-content h1{font-size:clamp(43px,10vw,68px)}.holo-stage{min-height:340px;margin:0 2vw}.holo-card{max-width:500px}.holo-caption{bottom:0}}
 @media(max-width:560px){.hero{padding-top:76px;padding-bottom:65px}.holo-stage{min-height:300px;margin:0}.holo-card{padding:20px 17px}.holo-title{font-size:16px}.holo-spectrum{flex-wrap:wrap;justify-content:center;white-space:normal}.holo-metric{padding:3px 8px}.holo-value{font-size:32px}.holo-label{font-size:9px}.holo-caption{font-size:7px;letter-spacing:1px}}
 @media(prefers-reduced-motion:reduce){.holo-card{animation:none}}
+
+
+/* V9 — responsive real para escritorio, tablet y móvil */
+.header{position:sticky;top:0;z-index:50;min-width:0}
+.brand-logo{width:150px;height:48px}
+.menu-toggle{display:none}
+.hero{overflow:hidden}
+.hero-layout{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);align-items:center;gap:clamp(24px,3.5vw,58px);width:100%;max-width:1500px;margin:0 auto}
+.hero-content{min-width:0;position:relative;z-index:2}
+.hero-content h1{font-size:clamp(42px,4.7vw,72px);line-height:.99;max-width:760px;letter-spacing:-.055em}
+.hero-content .hero-copy{max-width:540px}
+.holo-stage{position:relative;min-width:0;width:100%;min-height:370px;display:flex;align-items:center;justify-content:center;isolation:isolate;perspective:900px}
+.holo-card{width:min(100%,510px);border-radius:18px;transform:rotateY(-5deg);background:linear-gradient(135deg,#0a2846ed,#07182aed 60%,#092e48e8);box-shadow:0 0 28px #00bfff2d,inset 0 0 35px #00aaff19;color:#e7f8ff}
+.holo-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.holo-metric{min-width:0}
+.holo-value{font-size:clamp(30px,3vw,42px)}
+.holo-spectrum{white-space:nowrap}
+@media(max-width:1050px){
+ .hero-layout{grid-template-columns:1fr;gap:26px}
+ .hero-content h1{font-size:clamp(43px,6vw,68px)}
+ .holo-stage{min-height:350px}
+ .holo-card{width:min(100%,540px)}
+}
+@media(max-width:720px){
+ .header{height:auto;min-height:70px;padding:11px 5vw;display:flex;align-items:center;justify-content:space-between;gap:14px;position:sticky}
+ .brand-logo{width:136px;height:44px}
+ .menu-toggle{display:flex;flex:0 0 42px;width:42px;height:42px;border:1px solid #79cfff55;border-radius:12px;background:#0b1728;color:#eaf8ff;align-items:center;justify-content:center;flex-direction:column;gap:5px;cursor:pointer}
+ .menu-toggle span{display:block;width:18px;height:2px;border-radius:2px;background:#9ceaff;transition:transform .2s,opacity .2s}
+ .header.menu-open .menu-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+ .header.menu-open .menu-toggle span:nth-child(2){opacity:0}
+ .header.menu-open .menu-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+ .header nav{display:none;position:absolute;top:calc(100% + 1px);left:5vw;right:5vw;z-index:60;flex-direction:column;align-items:stretch;gap:0;padding:8px;border:1px solid #84ceff40;border-radius:16px;background:#081321f5;box-shadow:0 18px 44px #0009;backdrop-filter:blur(16px);font-size:13px}
+ .header.menu-open nav{display:flex}
+ .header nav a{display:block;padding:13px 14px;border-radius:9px}
+ .header nav .nav-cta{margin-top:5px;text-align:center;border:1px solid #47b9ff55}
+ .hero{min-height:unset;padding:76px 6vw 62px}
+ .hero-layout{grid-template-columns:1fr;gap:22px}
+ .hero-content h1{font-size:clamp(41px,8.5vw,60px);letter-spacing:-.06em}
+ .hero-content .hero-copy{font-size:14px;line-height:1.75}
+ .holo-stage{min-height:330px;padding:8px 0 24px;perspective:none}
+ .holo-card{width:min(100%,540px);transform:none;animation:none;padding:22px 18px}
+ .holo-spectrum{white-space:normal;flex-wrap:wrap;justify-content:center}
+ .section{padding:72px 6vw}
+ .page-hero{padding:65px 6vw 48px}
+ .footer{gap:18px}
+}
+@media(max-width:440px){
+ .hero{padding-top:60px}
+ .hero-content h1{font-size:clamp(37px,9.5vw,46px)}
+ .brand-slogan{font-size:9px;letter-spacing:1.8px}
+ .holo-stage{min-height:300px}
+ .holo-card{padding:19px 14px}
+ .holo-top{font-size:8px;letter-spacing:1.2px}
+ .holo-title{font-size:15px;letter-spacing:1px}
+ .holo-title span{font-size:8px}
+ .holo-metric{padding:3px 7px}
+ .holo-value{font-size:29px}
+ .holo-label{font-size:8px}
+ .holo-spectrum{gap:5px;font-size:7px;padding:10px 7px}
+ .holo-caption{font-size:6px;letter-spacing:.5px}
+ .service-toggle{grid-template-columns:25px minmax(0,1fr) auto;gap:9px;padding:17px 12px}
+ .service-toggle strong{font-size:18px}
+ .package-panel{padding:0 10px 14px}
+ .gallery{grid-template-columns:1fr}
+ .footer-links{gap:12px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.holo-card,.btn,.photo-subcategory{animation:none!important;transition:none!important}}
