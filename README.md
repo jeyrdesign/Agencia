@@ -1,135 +1,26 @@
-# JEYR DESIGN — Web v2 para GitHub Pages
+# JEYR ADMIN — programación preparada
 
-## Archivos principales
-- `index.html`: portada, categorías, sección de marcas y paquetes desplegables.
-- `fotografia.html`, `diseno.html`, `audiovisual.html`, `branding.html`: páginas independientes para cada categoría del portafolio.
-- `css/style.css`: diseño responsive.
-- `js/main.js`: enlaces de WhatsApp/Instagram y comportamiento de paquetes.
-- `assets/portfolio/`: fotografías y muestras de trabajo.
-- `assets/marcas/`: logotipos PNG de marcas/clientes.
+Incluye acceso privado, dashboard responsive, CRUD de portafolio (fotos/videos), marcas (logos), paquetes (precios y características), bandeja de mensajes, configuración básica y métricas propias de eventos.
 
-## Publicar
-Sube TODO el contenido del ZIP a la raíz de tu repositorio GitHub (al mismo nivel que `index.html`). En Settings > Pages elige Deploy from a branch, `main`, `/ (root)`.
+## Proyecto Firebase configurado
+Project ID: jeyr-design-admin. SDK web 13.2.0. Se incorpora la configuración pública compartida.
 
-## Contacto
-Edita `js/main.js`:
-- Cambia `593XXXXXXXXX` por el WhatsApp real: código 593 y número sin el cero inicial.
-- Cambia `TU_USUARIO` por el usuario de Instagram sin @.
+## Antes de usar
+- El enlace `jeyr-design-admin-default-rtdb.firebaseio.com` es Realtime Database. Este código requiere **Cloud Firestore**, no Realtime Database.
+- Crear Cloud Firestore Standard en Firebase Console.
+- Crear el documento `admins/P1Cul9yW8fdtsqRoCwAHa3WRsSj1` con `active` Boolean true, `email` String `jeyrdesign@gmail.com`, `role` String `owner`.
+- Publicar `firebase/firestore.rules` en Firestore > Reglas.
+- Crear Firebase Storage y publicar `firebase/storage.rules`.
+- La cuenta ya creada en Authentication debe ser la única cuenta habilitada. No hay registro público.
 
-## Añadir fotografías a las páginas
-Sube las imágenes a la carpeta indicada y conserva estos nombres (o modifica la ruta `src` en el HTML).
+## Integración con web pública
+`admin/js/tracking.js` exporta `trackPageView()` y `trackLead()` para registrar visitas y consultas. El formulario público deberá crear documentos `messages` con name, email, phone, service, message, status:'new' y createdAt:serverTimestamp(). La integración del formulario y lectura pública de proyectos/logos/precios debe hacerse sobre los archivos actuales del sitio para no romperlo.
 
-Fotografía (`assets/portfolio/fotografia/`): `retrato-01.jpg`, `deportivo-01.jpg`, `evento-01.jpg`, `comercial-01.jpg`, `editorial-01.jpg`, `sesion-01.jpg`.
+## Estadísticas
+El panel cuenta eventos propios almacenados en Firestore. No son un sustituto de Google Analytics 4: GA4 se integrará después para fuentes de tráfico, sesiones y métricas avanzadas.
 
-Diseño (`assets/portfolio/diseno/`): `redes-01.jpg`, `flyer-01.jpg`, `portada-01.jpg`, `editorial-01.jpg`, `comercial-01.jpg`, `promocional-01.jpg`.
+## Publicación
+Subir la carpeta `admin` al repositorio del sitio y servirla bajo `/admin/` mediante HTTPS. No abrir HTML directamente desde el disco.
 
-Audiovisual (`assets/portfolio/audiovisual/`): `reel-01.jpg`, `promocional-01.jpg`, `evento-01.jpg`, `comercial-01.jpg`.
-
-Branding (`assets/portfolio/branding/`): `identidad-01.jpg`, `logo-01.jpg`, `aplicaciones-01.jpg`, `sistema-01.jpg`.
-
-Las tarjetas de imagen que aún no tengan archivo se ocultan automáticamente. Puedes añadir más figuras copiando un bloque `<figure>` en la página de esa categoría.
-
-## Añadir logotipos PNG
-Sube los PNG transparentes a `assets/marcas/`. En `index.html`, busca la sección `id="marcas"` y reemplaza cada bloque `<div class="brand-slot"><span>AGREGA LOGO PNG 01</span></div>` por:
-`<div class="brand-slot"><img src="assets/marcas/nombre-marca.png" alt="Nombre de la marca"></div>`
-Duplica el bloque para cada marca adicional. Utiliza logos cuyo uso tengas autorizado.
-
-## Paquetes
-En la portada, los paquetes están ocultos hasta que haces clic en el nombre del servicio. Edita los textos y precios dentro de los elementos `<article class="package">` de `index.html`. Los precios de fotografía ($65, $85 y $65) son referencias previas y deben confirmarse antes de publicar.
-
-
-## Nueva estructura del portafolio fotográfico
-
-Al entrar en **Fotografía**, el visitante encontrará seis subcategorías independientes:
-
-1. Fotografía deportiva — `fotografia-deportiva.html`
-2. Sesiones en estudio — `fotografia-estudio.html`
-3. Sesiones de XV años — `fotografia-xv.html`
-4. Coberturas fotográficas — `fotografia-coberturas.html`
-5. Fotografía comercial — `fotografia-comercial.html`
-6. Sesiones en exteriores — `fotografia-exteriores.html`
-
-Cada categoría tiene su propia galería y carpeta. Sube tus fotografías reales usando estos nombres:
-
-| Categoría | Carpeta | Archivos |
-|---|---|---|
-| Deportiva | `assets/portfolio/fotografia/deportiva/` | `portada.jpg`, `partido-01.jpg`, `accion-01.jpg`, `equipo-01.jpg`, `entrenamiento-01.jpg`, `evento-01.jpg`, `detalle-01.jpg` |
-| Estudio | `assets/portfolio/fotografia/estudio/` | `portada.jpg`, `retrato-01.jpg`, `editorial-01.jpg`, `concepto-01.jpg`, `perfil-01.jpg`, `detalle-01.jpg`, `sesion-01.jpg` |
-| XV años | `assets/portfolio/fotografia/xv-anos/` | `portada.jpg`, `retrato-01.jpg`, `vestuario-01.jpg`, `exteriores-01.jpg`, `detalle-01.jpg`, `editorial-01.jpg`, `sesion-01.jpg` |
-| Coberturas | `assets/portfolio/fotografia/coberturas/` | `portada.jpg`, `evento-01.jpg`, `protagonistas-01.jpg`, `ambiente-01.jpg`, `detalles-01.jpg`, `accion-01.jpg`, `momentos-01.jpg` |
-| Comercial | `assets/portfolio/fotografia/comercial/` | `portada.jpg`, `producto-01.jpg`, `marca-01.jpg`, `espacio-01.jpg`, `detalle-01.jpg`, `campana-01.jpg`, `catalogo-01.jpg` |
-| Exteriores | `assets/portfolio/fotografia/exteriores/` | `portada.jpg`, `retrato-01.jpg`, `pareja-01.jpg`, `familia-01.jpg`, `locacion-01.jpg`, `lifestyle-01.jpg`, `sesion-01.jpg` |
-
-Puedes sustituir los archivos por tus fotografías conservando los nombres. Si quieres más imágenes, duplica una etiqueta `<figure>` en el HTML de la categoría y cambia la ruta y el texto alternativo.
-
-## Actualización de tipografía y estilo
-
-La web ahora utiliza **Outfit** para titulares y **Manrope** para textos y navegación. El lenguaje visual mantiene la identidad oscura con azul eléctrico y celeste, pero incorpora más aire, tarjetas redondeadas, contrastes suaves y animaciones discretas para transmitir frescura y modernidad.
-
-
-## Logo oficial y eslogan
-
-El logo vectorial oficial está integrado en `assets/brand/jeyr-design.svg` y se muestra en el encabezado y pie de página de todas las secciones. El archivo se ha ajustado en su área visible para evitar márgenes vacíos del lienzo original. Como el SVG original es negro y el sitio tiene fondo oscuro, se muestra en blanco mediante un filtro CSS, sin modificar el archivo fuente ni sus formas.
-
-Eslogan oficial: **«Los mejores, con los mejores»**. Está incorporado en la portada y en los pies de página.
-
-## Tarjetas de fotografía
-
-Las seis subcategorías se presentan como tarjetas visuales con imagen de fondo, degradado para mejorar la lectura, indicador de categoría y microinteracciones. Para que las tarjetas luzcan completas, reemplaza cada `portada.jpg` indicado en la sección anterior por una fotografía propia de esa categoría.
-
-
-## Icono de la página (favicon)
-
-El isotipo de JEYR DESIGN ya está configurado como icono de pestaña del navegador en todas las páginas. Se incluyen `favicon.svg`, `favicon.ico`, versiones PNG y `apple-touch-icon.png` para dispositivos móviles. Si GitHub Pages conserva el icono anterior por caché, recarga el sitio con Ctrl + F5 o prueba en una ventana privada.
-
-
-## Actualización v7 — Hero holográfico
-- La portada mantiene el fondo oscuro y sus degradados originales.
-- El contenido se distribuye en dos columnas: texto a la izquierda y panel holográfico a la derecha.
-- Se conserva el degradado azul-cian del botón «Explorar portafolio».
-- El panel muestra datos descriptivos del sitio: 4 áreas creativas, 6 líneas fotográficas y ubicación en Babahoyo.
-- El panel se adapta a móviles y reduce movimiento si el dispositivo tiene esa preferencia configurada.
-
-
-## Actualización v8 — Corrección de visualización del holograma
-- Se conserva el fondo original de la portada; no se reemplaza por otro degradado.
-- Los estilos críticos del panel holográfico también están incluidos en el HTML para evitar que una copia antigua de CSS lo muestre como texto simple.
-- La hoja externa ahora usa `css/style.css?v=8` para forzar una nueva carga en navegador/CDN.
-- El panel aparece a la derecha en escritorio y se acomoda debajo del texto en móviles.
-- Se mantiene el degradado azul-cian del botón «Explorar portafolio».
-
-
-## Versión 9 — Adaptación PC y móvil
-- Portada con texto y holograma en dos columnas en pantallas amplias.
-- En tablet y móvil, el holograma pasa debajo del texto y conserva su tarjeta y estadísticas sin desbordarse.
-- Menú móvil desplegable con botón accesible; se cierra al navegar o pulsar Escape.
-- Se ajustaron tarjetas, galerías, paquetes, encabezado y pie de página para pantallas pequeñas.
-- Se conserva el fondo oscuro original, el degradado del botón, el logo, favicon y WhatsApp oficial.
-- La hoja CSS se carga con versión `v=9` para evitar caché antigua.
-
-
-## Galerías fotográficas automáticas (sin editar código)
-
-Las seis galerías de fotografía cargan automáticamente las imágenes numeradas desde su carpeta. Solo debes subir los archivos con numeración consecutiva:
-
-- `01.jpg`
-- `02.jpg`
-- `03.jpg`
-- `04.jpg`
-
-También se admiten las extensiones `.jpeg`, `.png` y `.webp`. Puedes mezclar formatos, pero conserva la numeración continua y usa dos dígitos (`01`, `02`, ... `09`, `10`, etc.). El sistema admite hasta 99 fotografías por categoría y se detiene al encontrar el primer número que no exista. No dejes huecos en la secuencia.
-
-| Categoría | Carpeta donde subir las fotos |
-|---|---|
-| Fotografía deportiva | `assets/portfolio/fotografia/deportiva/` |
-| Sesiones en estudio | `assets/portfolio/fotografia/estudio/` |
-| Sesiones de XV años | `assets/portfolio/fotografia/xv-anos/` |
-| Coberturas fotográficas | `assets/portfolio/fotografia/coberturas/` |
-| Fotografía comercial | `assets/portfolio/fotografia/comercial/` |
-| Sesiones en exteriores | `assets/portfolio/fotografia/exteriores/` |
-
-### Imagen de portada de cada tarjeta
-
-Para la tarjeta de cada categoría en la página principal de Fotografía, conserva una imagen independiente llamada exactamente `portada.jpg` dentro de la carpeta de esa categoría. Ejemplo: `assets/portfolio/fotografia/deportiva/portada.jpg`. La portada no forma parte de la secuencia de la galería.
-
-**Importante:** sube las fotografías a la carpeta correcta y conserva el nombre exacto. No necesitas modificar HTML, CSS ni JavaScript al añadir o reemplazar fotografías. GitHub Pages es un alojamiento estático; por eso el cargador busca los nombres numerados en lugar de intentar leer el listado de archivos de la carpeta.
+## Nota técnica
+La carga de archivos requiere Firebase Storage habilitado y sus reglas publicadas. El panel está preparado en código, pero no puede funcionar hasta completar Firestore, Storage y el documento de propietario.
