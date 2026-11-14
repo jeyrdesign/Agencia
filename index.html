@@ -18,7 +18,7 @@
 <body>
   <div class="noise"></div>
   <header class="site-header">
-    <a class="brand" href="#inicio" aria-label="JEYR DESIGN inicio"><img class="brand-logo-img" src="assets/img/jeyr-logo.svg" alt="JEYR DESIGN"></a>
+    <a class="brand" href="#inicio" aria-label="JEYR DESIGN inicio"><img class="brand-logo-mark" src="assets/img/jeyr-logo.svg" alt="JEYR DESIGN"></a>
     <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">☰</button>
     <nav id="main-nav">
       <a href="#nosotros">Nosotros</a><a href="#servicios">Servicios</a><a href="#portafolio">Portafolio</a><a href="#paquetes">Paquetes</a><a href="#contacto" class="nav-cta">Hablemos <span>↗</span></a>
@@ -51,12 +51,12 @@
     </section>
 
     <section class="services section-wrap" id="servicios">
-      <div class="section-heading"><div><div class="section-kicker">02 / LO QUE HACEMOS</div><h2>Soluciones para<br><em>hacerte destacar.</em></h2></div><p>Unimos concepto, técnica y creatividad para construir una comunicación visual coherente en cada punto de contacto.</p></div>
+      <div class="section-heading"><div><div class="section-kicker">02 / LO QUE HACEMOS</div><h2>Nuestros servicios<br><em>creativos.</em></h2></div><p>Unimos concepto, técnica y creatividad para construir una comunicación visual coherente en cada punto de contacto.</p></div>
       <div class="service-grid">
-        <article class="service-card service-feature"><span class="service-number">01</span><div class="service-icon">✳</div><h3>Diseño gráfico<br>& branding</h3><p>Identidad visual, piezas publicitarias y sistemas gráficos que hacen reconocible tu marca.</p><a href="#contacto">Solicitar servicio <span>↗</span></a></article>
-        <article class="service-card"><span class="service-number">02</span><div class="service-icon">◉</div><h3>Fotografía<br>profesional</h3><p>Sesiones, producto, retrato y cobertura de eventos con una mirada auténtica.</p><a href="#contacto">Solicitar servicio <span>↗</span></a></article>
-        <article class="service-card"><span class="service-number">03</span><div class="service-icon">▷</div><h3>Producción<br>audiovisual</h3><p>Videos, reels y contenido pensado para contar historias y captar atención.</p><a href="#contacto">Solicitar servicio <span>↗</span></a></article>
-        <article class="service-card"><span class="service-number">04</span><div class="service-icon">⌘</div><h3>Contenido<br>digital</h3><p>Creatividad para redes sociales, campañas y comunicación institucional.</p><a href="#contacto">Solicitar servicio <span>↗</span></a></article>
+        <article class="service-card service-feature" data-service-category="diseno" role="button" tabindex="0" aria-label="Ver paquetes de diseño gráfico y branding"><span class="service-number">01</span><div class="service-icon">✳</div><h3>Diseño gráfico<br>&amp; branding</h3><p>Identidad visual, piezas publicitarias y sistemas gráficos que hacen reconocible tu marca.</p><span class="service-action">Ver paquetes <b>↗</b></span></article>
+        <article class="service-card" data-service-category="fotografia" role="button" tabindex="0" aria-label="Ver paquetes de fotografía"><span class="service-number">02</span><div class="service-icon">◉</div><h3>Fotografía<br>profesional</h3><p>Sesiones, producto, retrato y cobertura de eventos con una mirada auténtica.</p><span class="service-action">Ver paquetes <b>↗</b></span></article>
+        <article class="service-card" data-service-category="audiovisual" role="button" tabindex="0" aria-label="Ver paquetes de producción audiovisual"><span class="service-number">03</span><div class="service-icon">▷</div><h3>Producción<br>audiovisual</h3><p>Videos, reels y contenido pensado para contar historias y captar atención.</p><span class="service-action">Ver paquetes <b>↗</b></span></article>
+        <article class="service-card" data-service-category="digital" role="button" tabindex="0" aria-label="Ver paquetes de contenido digital"><span class="service-number">04</span><div class="service-icon">⌘</div><h3>Contenido<br>digital</h3><p>Creatividad para redes sociales, campañas y comunicación institucional.</p><span class="service-action">Ver paquetes <b>↗</b></span></article>
       </div>
     </section>
 
@@ -73,8 +73,8 @@
     <section class="quote-band"><div class="section-wrap quote-inner"><span>✳</span><p>Los mejores,<br><em>con los mejores.</em></p><small>JEYR DESIGN / EST. ECUADOR</small></div></section>
 
     <section class="packages section-wrap" id="paquetes">
-      <div class="section-heading"><div><div class="section-kicker">04 / TRABAJEMOS JUNTOS</div><h2>Opciones para<br><em>cada proyecto.</em></h2></div><p>Conoce nuestras opciones iniciales. Cada proyecto puede adaptarse a tus necesidades y objetivos.</p></div>
-      <div class="package-grid" id="package-grid">
+      <div class="section-heading"><div><div class="section-kicker">04 / TRABAJEMOS JUNTOS</div><h2>Soluciones para<br><em>hacerte destacar.</em></h2></div><p>Conoce nuestras opciones iniciales. Cada proyecto puede adaptarse a tus necesidades y objetivos.</p></div>
+      <p class="package-filter-status" id="package-filter-status" aria-live="polite">Explora nuestros servicios y selecciona una categoría para ver sus paquetes.</p><div class="package-grid" id="package-grid">
         <article class="package-card"><span>FOTOGRAFÍA</span><h3>Sesión Esencial</h3><p class="price">Desde <b>$65</b></p><p>1 hora de sesión · 11 fotografías retocadas profesionalmente · entrega digital. Bonus: hasta 1 hora y media según disponibilidad del fotógrafo.</p><a href="#contacto">Consultar disponibilidad ↗</a></article>
         <article class="package-card featured"><span>FOTOGRAFÍA</span><h3>Sesión Profesional</h3><p class="price">Desde <b>$85</b></p><p>1 hora de sesión · 11 fotografías retocadas profesionalmente · entrega digital y perfeccionamiento de detalles. Bonus sujeto a disponibilidad.</p><a href="#contacto">Consultar disponibilidad ↗</a></article>
         <article class="package-card"><span>COBERTURAS</span><h3>Evento / Cobertura</h3><p class="price">Desde <b>$70</b></p><p>Cobertura según el evento, selección y edición de fotografías y entrega digital. Precio final según requerimientos.</p><a href="#contacto">Consultar disponibilidad ↗</a></article>
@@ -89,7 +89,7 @@
       <form id="contact-form" class="contact-form"><label>Tu nombre<input name="name" required minlength="2" placeholder="¿Cómo te llamas?"></label><label>Correo electrónico<input name="email" type="email" placeholder="correo@ejemplo.com"></label><label>WhatsApp / Teléfono<input name="phone" placeholder="+593..."></label><label>¿Qué necesitas?<select name="service"><option value="">Selecciona un servicio</option><option>Diseño gráfico y branding</option><option>Fotografía profesional</option><option>Producción audiovisual</option><option>Contenido digital</option><option>Otro proyecto</option></select></label><label>Cuéntanos un poco más<textarea name="message" required minlength="5" rows="4" placeholder="Describe brevemente tu idea..."></textarea></label><button class="btn btn-primary" type="submit">Enviar consulta <span>↗</span></button><p class="form-status" id="form-status" role="status">También puedes escribirnos directamente por WhatsApp.</p></form>
     </section>
   </main>
-  <footer class="site-footer"><a class="brand" href="#inicio"><img class="brand-logo-img" src="assets/img/jeyr-logo.svg" alt="JEYR DESIGN"></a><p>Los mejores, con los mejores.</p><div><a href="#servicios">Servicios</a><a href="#portafolio">Portafolio</a><a href="https://www.instagram.com/jeyrdesign/" target="_blank" rel="noopener">Instagram ↗</a></div><small>© <span id="year"></span> JEYR DESIGN. Todos los derechos reservados.</small></footer>
+  <footer class="site-footer"><a class="brand" href="#inicio"><img class="brand-logo-mark" src="assets/img/jeyr-logo.svg" alt="JEYR DESIGN"></a><p>Los mejores, con los mejores.</p><div><a href="#servicios">Servicios</a><a href="#portafolio">Portafolio</a><a href="https://www.instagram.com/jeyrdesign/" target="_blank" rel="noopener">Instagram ↗</a></div><small>© <span id="year"></span> JEYR DESIGN. Todos los derechos reservados.</small></footer>
   <a class="whatsapp-float" id="whatsapp-float" href="https://wa.me/593980478748" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp">◔</a>
   <script type="module" src="assets/js/site.js"></script>
 </body>
