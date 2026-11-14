@@ -1,0 +1,5 @@
+import { auth } from "./firebase.js";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+const form=document.querySelector("#login-form"), error=document.querySelector("#login-error"), button=form.querySelector("button");
+onAuthStateChanged(auth,user=>{if(user)location.replace("./dashboard.html")});
+form.addEventListener("submit",async e=>{e.preventDefault();error.textContent="";button.disabled=true;try{await signInWithEmailAndPassword(auth,document.querySelector("#email").value.trim(),document.querySelector("#password").value);location.replace("./dashboard.html")}catch(err){console.error(err);error.textContent="No se pudo iniciar sesión. Revisa correo, contraseña y el método Correo/Contraseña en Firebase."}finally{button.disabled=false}});
