@@ -1,0 +1,6 @@
+import {auth,db} from "./firebase.js";
+import {signInWithEmailAndPassword,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+import {doc,getDoc} from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+const form=document.querySelector("#login-form"),error=document.querySelector("#error");
+onAuthStateChanged(auth,async user=>{if(!user)return;try{const a=await getDoc(doc(db,"admins",user.uid));if(a.exists()&&a.data().active===true&&a.data().role==="owner")location.replace("./dashboard.html");}catch(e){console.warn(e)}});
+form.addEventListener("submit",async e=>{e.preventDefault();error.textContent="";const button=form.querySelector("button");button.disabled=true;button.textContent="Verificando...";try{const cred=await signInWithEmailAndPassword(auth,form.email.value.trim(),form.password.value);const a=await getDoc(doc(db,"admins",cred.user.uid));if(!a.exists()||a.data().active!==true||a.data().role!=="owner"){error.textContent="Esta cuenta no tiene permisos de administrador.";return;}location.href="./dashboard.html";}catch(e){error.textContent="No se pudo iniciar sesión. Revisa tus credenciales y la configuración de Firebase.";}finally{button.disabled=false;button.textContent="Iniciar sesión ↗";}});
