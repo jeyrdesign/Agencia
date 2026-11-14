@@ -75,3 +75,9 @@ La página pública incluye textos y paquetes iniciales referenciales. Los paque
 - **Eventos / Cobertura Especial** — categoría Coberturas; precio desde USD 70; cobertura según evento; selección y edición; entrega digital; cotización final según evento.
 
 Estos paquetes aparecen como contenido inicial de respaldo en la web. Para que el panel los administre dinámicamente, créalos también en **Servicios y paquetes** dentro de `/admin/`.
+
+
+## Actualización de carga de fotografías y logo
+- El panel permite seleccionar varias imágenes a la vez; cada archivo se registra como un proyecto independiente.
+- Se incorporó el logo original JEYR DESIGN en la web y el panel administrativo.
+- Si la carga falla, el panel muestra el código y el motivo devuelto por Firebase. Comprueba que Firebase Storage esté habilitado y que las reglas de `firebase/storage.rules` estén publicadas.
