@@ -1,0 +1,20 @@
+CONFIGURACIÓN DE CLOUDINARY PARA JEYR DESIGN (GRATUITO)
+
+1. Abre https://cloudinary.com/users/register/free y crea una cuenta gratuita.
+2. En el Dashboard, copia el valor llamado Cloud name.
+3. Abre Settings (engranaje) > Upload > Upload presets > Add upload preset.
+4. Pon un nombre fácil de reconocer: jeyr_unsigned.
+5. En Signing Mode selecciona Unsigned.
+6. En Allowed formats coloca: jpg,jpeg,png,webp,svg,mp4,webm.
+7. Guarda el preset.
+8. En tu web abre https://www.jeyrdesign.com/admin/ e inicia sesión.
+9. En el menú del panel entra en Configuración.
+10. Pega Cloud name y el nombre exacto del Upload preset. Pulsa Guardar.
+11. Entra en Marcas > Agregar marca y prueba con un PNG/JPG pequeño.
+
+IMPORTANTE
+- No se necesita Firebase Storage ni el plan Blaze.
+- No pegues API Secret, API Key, contraseñas ni claves privadas en la web.
+- Cloudinary Free incluye 25 créditos mensuales compartidos entre almacenamiento, ancho de banda y transformaciones; revisa Usage en Cloudinary.
+- El preset unsigned permite cargas directas desde el navegador; limita formatos y vigila el uso.
+- Los datos de Firestore se conservan. Las imágenes antiguas no se migran automáticamente: si una URL anterior no carga, vuelve a subir ese archivo desde el panel.

@@ -58,13 +58,13 @@ function drawPackages() {
     const haystack = normalize([item.category,item.name,item.description,...(item.features||[])].join(" "));
     return terms.some(term => haystack.includes(normalize(term)));
   });
-  const fallback = (activePackageCategory === "all" || activePackageCategory === "fotografia") && !allPackages.length;
+  const fallback = activePackageCategory === "all" && !allPackages.length;
   if (fallback) {
     grid.innerHTML = `
       <article class="package-card"><span>FOTOGRAFÍA</span><h3>Sesión Esencial</h3><p class="price">Desde <b>$65</b></p><p>1 hora de sesión · 11 fotografías retocadas profesionalmente · entrega digital. Bonus: hasta 1 hora y media según disponibilidad del fotógrafo.</p><a href="#contacto" data-package="Sesión Esencial">Consultar disponibilidad ↗</a></article>
       <article class="package-card featured"><span>FOTOGRAFÍA</span><h3>Sesión Profesional</h3><p class="price">Desde <b>$85</b></p><p>1 hora de sesión · 11 fotografías retocadas profesionalmente · entrega digital y perfeccionamiento de detalles.</p><a href="#contacto" data-package="Sesión Profesional">Consultar disponibilidad ↗</a></article>
       <article class="package-card"><span>COBERTURAS</span><h3>Evento / Cobertura</h3><p class="price">Desde <b>$70</b></p><p>Cobertura según el evento, selección y edición de fotografías y entrega digital.</p><a href="#contacto" data-package="Evento / Cobertura">Consultar disponibilidad ↗</a></article>`;
-    status.textContent = activePackageCategory === "fotografia" ? "Opciones iniciales de fotografía." : "Opciones iniciales de fotografía. Los demás paquetes aparecerán al publicarlos desde el administrador.";
+    status.textContent = "Opciones iniciales de fotografía. Los demás paquetes aparecerán al publicarlos desde el administrador.";
   } else if (!filtered.length) {
     grid.innerHTML = `<div class="empty-dynamic"><b>Aún no hay paquetes publicados en esta categoría.</b><p>Escríbenos y prepararemos una propuesta para tu proyecto.</p><a class="btn btn-primary" href="#contacto">Solicitar una propuesta ↗</a></div>`;
     status.textContent = "Categoría seleccionada: " + (document.querySelector(`[data-service-category="${activePackageCategory}"] h3`)?.innerText.replace(/\s+/g," ") || "Servicio");
@@ -96,10 +96,24 @@ document.querySelectorAll("[data-service-category]").forEach(card => {
 });
 
 function renderBrands(items) {
-  if (!items.length) return;
-  $("#brands-row").innerHTML = items.slice(0,8).map(x => x.logoUrl
-    ? `<img class="brand-logo" src="${esc(x.logoUrl)}" alt="${esc(x.name)}" loading="lazy">`
-    : `<span>${esc(x.name)}</span>`).join("");
+  const row = $("#brands-row");
+  if (!row) return;
+  if (!items.length) {
+    row.innerHTML = `<div class="brand-tile brand-placeholder">Tu marca podría estar aquí</div><div class="brand-tile brand-placeholder">Creamos juntos</div><div class="brand-tile brand-placeholder">JEYR DESIGN</div>`;
+    return;
+  }
+  row.innerHTML = items.slice(0,12).map(x => `
+    <div class="brand-tile" title="${esc(x.name || 'Marca colaboradora')}">
+      ${x.logoUrl
+        ? `<img class="brand-logo" src="${esc(x.logoUrl)}" alt="${esc(x.name || 'Logotipo de marca')}" loading="lazy">`
+        : `<span class="brand-name-fallback">${esc(x.name || 'Marca colaboradora')}</span>`}
+    </div>`).join("");
+  row.querySelectorAll(".brand-logo").forEach(img => img.addEventListener("error", () => {
+    const fallback = document.createElement("span");
+    fallback.className = "brand-name-fallback";
+    fallback.textContent = img.alt || "Marca colaboradora";
+    img.replaceWith(fallback);
+  }, {once:true}));
 }
 async function track(type, extra={}) {
   try { await addDoc(collection(db,"analyticsEvents"), {type, page:location.pathname, ...extra, createdAt:serverTimestamp()}); }
