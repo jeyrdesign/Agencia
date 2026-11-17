@@ -4,11 +4,6 @@ import { collection, getDocs, query, where, orderBy, addDoc, serverTimestamp, do
 const $ = (s) => document.querySelector(s);
 const esc = (v="") => String(v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const whatsappDefault = "593980478748";
-let allPackages = [];
-let activePackageCategory = "all";
-const packageTerms = {diseno:["diseno","diseño","branding","marca","identidad","grafico","gráfico","publicidad"],fotografia:["foto","fotografia","fotografía","sesion","sesión","retrato","cobertura","evento","producto"],audiovisual:["audiovisual","video","vídeo","reel","produccion","producción","film"],digital:["digital","contenido","redes","social","community","campaña","campana"]};
-const normalize = value => String(value||"").toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-
 $("#year").textContent = new Date().getFullYear();
 $("#menu-toggle").addEventListener("click", () => $("#main-nav").classList.toggle("open"));
 document.querySelectorAll("#main-nav a").forEach(a => a.addEventListener("click", () => $("#main-nav").classList.remove("open")));
@@ -46,55 +41,6 @@ function renderPortfolio(items) {
     </article>`).join("");
   $("#portfolio-note").textContent = "Proyectos seleccionados de JEYR DESIGN.";
 }
-function renderPackages(items) {
-  allPackages = items;
-  drawPackages();
-}
-function drawPackages() {
-  const grid = $("#package-grid");
-  const status = $("#package-filter-status");
-  const terms = packageTerms[activePackageCategory] || [];
-  const filtered = activePackageCategory === "all" ? allPackages : allPackages.filter(item => {
-    const haystack = normalize([item.category,item.name,item.description,...(item.features||[])].join(" "));
-    return terms.some(term => haystack.includes(normalize(term)));
-  });
-  const fallback = activePackageCategory === "all" && !allPackages.length;
-  if (fallback) {
-    grid.innerHTML = `
-      <article class="package-card"><span>FOTOGRAFÍA</span><h3>Sesión Esencial</h3><p class="price">Desde <b>$65</b></p><p>1 hora de sesión · 11 fotografías retocadas profesionalmente · entrega digital. Bonus: hasta 1 hora y media según disponibilidad del fotógrafo.</p><a href="#contacto" data-package="Sesión Esencial">Consultar disponibilidad ↗</a></article>
-      <article class="package-card featured"><span>FOTOGRAFÍA</span><h3>Sesión Profesional</h3><p class="price">Desde <b>$85</b></p><p>1 hora de sesión · 11 fotografías retocadas profesionalmente · entrega digital y perfeccionamiento de detalles.</p><a href="#contacto" data-package="Sesión Profesional">Consultar disponibilidad ↗</a></article>
-      <article class="package-card"><span>COBERTURAS</span><h3>Evento / Cobertura</h3><p class="price">Desde <b>$70</b></p><p>Cobertura según el evento, selección y edición de fotografías y entrega digital.</p><a href="#contacto" data-package="Evento / Cobertura">Consultar disponibilidad ↗</a></article>`;
-    status.textContent = "Opciones iniciales de fotografía. Los demás paquetes aparecerán al publicarlos desde el administrador.";
-  } else if (!filtered.length) {
-    grid.innerHTML = `<div class="empty-dynamic"><b>Aún no hay paquetes publicados en esta categoría.</b><p>Escríbenos y prepararemos una propuesta para tu proyecto.</p><a class="btn btn-primary" href="#contacto">Solicitar una propuesta ↗</a></div>`;
-    status.textContent = "Categoría seleccionada: " + (document.querySelector(`[data-service-category="${activePackageCategory}"] h3`)?.innerText.replace(/\s+/g," ") || "Servicio");
-  } else {
-    grid.innerHTML = filtered.map((x,i) => `
-      <article class="package-card ${i===1?"featured":""}">
-        <span>${esc(x.category || "SERVICIO")}</span><h3>${esc(x.name)}</h3>
-        <p class="price">Desde <b>$${Number(x.price || 0).toFixed(0)}</b></p>
-        <p>${esc(x.description || "")}</p>
-        ${Array.isArray(x.features) && x.features.length ? `<ul>${x.features.map(f=>`<li>${esc(f)}</li>`).join("")}</ul>` : ""}
-        <a href="#contacto" data-package="${esc(x.name)}">Consultar este paquete ↗</a>
-      </article>`).join("");
-    status.textContent = activePackageCategory === "all" ? "Todos nuestros paquetes disponibles." : `Mostrando ${filtered.length} paquete(s) de esta categoría.`;
-  }
-  document.querySelectorAll("[data-package]").forEach(a => a.addEventListener("click", () => {
-    const select = document.querySelector('[name="service"]');
-    if (select) select.value = a.dataset.package;
-  }));
-}
-function selectServiceCategory(category) {
-  activePackageCategory = category;
-  drawPackages();
-  location.hash = "paquetes";
-  setTimeout(() => $("#paquetes")?.scrollIntoView({behavior:"smooth",block:"start"}), 40);
-}
-document.querySelectorAll("[data-service-category]").forEach(card => {
-  card.addEventListener("click", () => selectServiceCategory(card.dataset.serviceCategory));
-  card.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectServiceCategory(card.dataset.serviceCategory); } });
-});
-
 function renderBrands(items) {
   const row = $("#brands-row");
   if (!row) return;
@@ -135,6 +81,6 @@ $("#contact-form").addEventListener("submit", async (e) => {
   } finally { button.disabled = false; button.innerHTML = 'Enviar consulta <span>↗</span>'; }
 });
 (async function init(){
-  await Promise.all([loadSettings(), getPublished("portfolio").then(renderPortfolio), getPublished("packages").then(renderPackages), getPublished("brands").then(renderBrands)]);
+  await Promise.all([loadSettings(), getPublished("portfolio").then(renderPortfolio), getPublished("brands").then(renderBrands)]);
   track("page_view");
 })();

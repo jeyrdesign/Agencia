@@ -44,3 +44,39 @@ img,video{max-width:100%}button,a{-webkit-tap-highlight-color:transparent}.servi
  .quote-isotype img{width:37px;height:37px}
 }
 @media(max-width:360px){.brands-row{grid-template-columns:1fr 1fr}.brand-tile{height:78px}}
+
+
+/* Proyección holográfica del retrato: conserva la geometría original del hero */
+.site-header .brand-logo-mark{width:112px;height:38px}
+.site-footer .brand-logo-mark{width:112px;height:38px}
+.hero-image{isolation:isolate;background:linear-gradient(145deg,#0c3145,#071827 55%,#06111c)}
+.hero-image:before{z-index:0;background:radial-gradient(ellipse at 68% 32%,rgba(0,191,255,.28),transparent 44%),linear-gradient(130deg,rgba(0,191,255,.08),rgba(0,0,0,.42))}
+.hero-hologram{position:absolute;z-index:1;right:0;bottom:0;width:100%;height:100%;object-fit:contain;object-position:right bottom;opacity:.84;mix-blend-mode:screen;filter:drop-shadow(0 0 14px rgba(0,191,255,.48));animation:holo-breathe 5.5s ease-in-out infinite;pointer-events:none}
+.hero-image-shade{z-index:2;background:linear-gradient(0deg,rgba(4,13,23,.78) 0%,rgba(4,13,23,.05) 48%,rgba(0,191,255,.04) 100%)}
+.hero-image:after{z-index:3;pointer-events:none}
+.image-label{z-index:4}
+.hero-image:before{pointer-events:none}
+@keyframes holo-breathe{0%,100%{opacity:.76;filter:drop-shadow(0 0 10px rgba(0,191,255,.36))}50%{opacity:.91;filter:drop-shadow(0 0 21px rgba(0,191,255,.58))}}
+@media(max-width:650px){.site-header .brand-logo-mark{width:98px;height:34px}.site-footer .brand-logo-mark{width:108px;height:37px}.hero-hologram{opacity:.82}.hero-image{overflow:hidden}}
+@media(prefers-reduced-motion:reduce){.hero-hologram{animation:none}}
+
+/* Microinteracciones: movimiento sutil, sin alterar la estructura visual. */
+:root{--motion-ease:cubic-bezier(.2,.75,.25,1)}
+html{scroll-behavior:smooth}
+.motion-reveal{opacity:0;transform:translate3d(0,22px,0);transition:opacity .72s var(--motion-ease),transform .72s var(--motion-ease);transition-delay:var(--reveal-delay,0ms)}
+.motion-reveal.is-visible{opacity:1;transform:translate3d(0,0,0)}
+.service-card,.category-panel,.package-card,.brand-tile{position:relative;transform-style:preserve-3d;transition:transform .35s var(--motion-ease),border-color .35s ease,box-shadow .35s ease,background-color .35s ease;will-change:transform}
+.service-card:before,.category-panel:before,.package-card:before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;background:radial-gradient(380px circle at var(--pointer-x,50%) var(--pointer-y,50%),rgba(0,191,255,.16),transparent 58%);transition:opacity .3s ease}
+.service-card:hover,.category-panel:hover,.package-card:hover{transform:perspective(900px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) translateY(-8px);border-color:rgba(0,191,255,.58);box-shadow:0 22px 55px rgba(0,0,0,.28),0 0 28px rgba(0,191,255,.10)}
+.service-card:hover:before,.category-panel:hover:before,.package-card:hover:before{opacity:1}
+.service-card .service-action,.category-panel>b,.package-cta{transition:gap .25s ease,color .25s ease,transform .25s ease}
+.service-card:hover .service-action,.category-panel:hover>b{transform:translateX(4px);color:#20cfff}
+.brand-tile:hover{transform:translateY(-5px) scale(1.025);box-shadow:0 18px 38px rgba(0,0,0,.25),0 0 20px rgba(0,191,255,.12)}
+.portfolio-item img,.portfolio-item video{transition:transform .65s var(--motion-ease),filter .45s ease}
+.portfolio-item:hover img,.portfolio-item:hover video{transform:scale(1.045);filter:saturate(1.08)}
+.btn,.nav-cta,.whatsapp-float{transition:transform .25s ease,box-shadow .25s ease,filter .25s ease}
+.btn:hover,.nav-cta:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 10px 28px rgba(0,191,255,.18)}
+.whatsapp-float:hover{transform:translateY(-4px) scale(1.05)}
+.menu-toggle:focus-visible,a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #00bfff;outline-offset:4px}
+@media(max-width:700px),(hover:none){.motion-reveal{transform:translate3d(0,12px,0)}.service-card:hover,.category-panel:hover,.package-card:hover{transform:translateY(-3px)}.brand-tile:hover{transform:translateY(-2px)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.motion-reveal{opacity:1;transform:none;transition:none}.service-card,.category-panel,.package-card,.brand-tile,.portfolio-item img,.portfolio-item video,.btn,.nav-cta,.whatsapp-float{transition:none!important;transform:none!important;animation:none!important}}

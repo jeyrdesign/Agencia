@@ -48,3 +48,19 @@ No configures Firebase Storage ni publiques reglas de Storage. El archivo `admin
 - Servicio “Contenido digital” renombrado a “Paquetes Digitales” en la interfaz pública.
 - Sección de marcas con tarjetas uniformes, fondos claros y logotipos centrados para mantener una presentación ordenada.
 - Paleta turquesa más azulada y eléctrica, sin tonos menta/pastel.
+
+
+## Actualización del holograma de portada
+- Se integró el retrato proporcionado como una proyección holográfica PNG con transparencia, color azul/turquesa eléctrico, brillo y líneas de escaneo.
+- La fotografía se superpone dentro del mismo rectángulo inclinado `.hero-image`; no se cambian su estructura, órbitas, tarjetas flotantes, textos ni composición.
+- El archivo está en `assets/img/hero-hologram.png`. Mantén esa ruta al publicar.
+- Se redujo el logotipo original en cabecera y pie, con una escala menor adicional en móvil.
+
+## Catálogo de paquetes en páginas independientes
+- La página principal ya no contiene todos los paquetes en una sola sección.
+- El menú y las tarjetas de servicios abren el catálogo en una pestaña nueva.
+- `paquetes/index.html` funciona como índice de categorías.
+- Cada categoría tiene su propia página: `paquetes/diseno.html`, `paquetes/fotografia.html`, `paquetes/audiovisual.html` y `paquetes/digitales.html`.
+- Cada página consulta los paquetes publicados en Firestore y filtra por su categoría. En el administrador, al crear o editar un paquete, selecciona una de las cuatro categorías disponibles para que aparezca en la página correcta.
+- Los botones de consulta abren WhatsApp con el nombre del paquete.
+- Google Drive no forma parte de esta arquitectura. Cloudinary gestiona los medios y Firebase Firestore conserva los datos y enlaces.
