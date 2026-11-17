@@ -80,3 +80,28 @@ html{scroll-behavior:smooth}
 .menu-toggle:focus-visible,a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #00bfff;outline-offset:4px}
 @media(max-width:700px),(hover:none){.motion-reveal{transform:translate3d(0,12px,0)}.service-card:hover,.category-panel:hover,.package-card:hover{transform:translateY(-3px)}.brand-tile:hover{transform:translateY(-2px)}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.motion-reveal{opacity:1;transform:none;transition:none}.service-card,.category-panel,.package-card,.brand-tile,.portfolio-item img,.portfolio-item video,.btn,.nav-cta,.whatsapp-float{transition:none!important;transform:none!important;animation:none!important}}
+
+/* JEYR: catálogo de eventos y logotipos sin franjas blancas */
+.brands-panel{padding:10px 0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.brands-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:18px;padding:0;border:0;color:#d8e8f0}
+.brand-tile{height:112px;padding:18px;background:rgba(10,29,43,.42);border:1px solid rgba(0,191,255,.14);border-radius:12px;box-shadow:none}
+.brand-tile:hover{background:rgba(0,191,255,.07);border-color:rgba(0,191,255,.42)}
+.brand-logo{max-width:100%;max-height:72px;width:auto;height:auto;object-fit:contain;filter:none;opacity:1}
+.portfolio-event{display:block;color:inherit;text-decoration:none;cursor:pointer}
+.portfolio-event img{width:100%;height:100%;min-height:280px;object-fit:cover;display:block}
+.portfolio-event-empty{min-height:280px;display:grid;place-items:center;color:#72dff5;background:linear-gradient(135deg,#102d40,#071522)}
+.portfolio-caption{z-index:1}
+.portfolio-open{display:inline-block;margin-top:9px;color:#65d9f2;font-size:10px;letter-spacing:.04em}
+@media(hover:hover){.portfolio-event:hover .portfolio-open{transform:translateX(5px)}}
+@media(prefers-reduced-motion:reduce){.portfolio-event img{transition:none}}
+
+/* Transiciones de navegación JEYR */
+body.page-enter{animation:jeyrPageIn .55s cubic-bezier(.2,.75,.25,1) both}
+@keyframes jeyrPageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+#main-nav a{position:relative;transition:color .25s ease,opacity .25s ease}
+#main-nav a:not(.nav-cta)::after{content:"";position:absolute;left:0;right:100%;bottom:-8px;height:1px;background:var(--cyan);transition:right .28s ease}
+#main-nav a:hover::after,#main-nav a.nav-current::after{right:0}
+#main-nav a.nav-current{color:var(--cyan)}
+.site-header{transition:background .3s ease,border-color .3s ease}
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+@media(prefers-reduced-motion:reduce){body.page-enter{animation:none}#main-nav a::after{transition:none}}

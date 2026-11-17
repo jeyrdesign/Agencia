@@ -18,3 +18,11 @@ IMPORTANTE
 - Cloudinary Free incluye 25 créditos mensuales compartidos entre almacenamiento, ancho de banda y transformaciones; revisa Usage en Cloudinary.
 - El preset unsigned permite cargas directas desde el navegador; limita formatos y vigila el uso.
 - Los datos de Firestore se conservan. Las imágenes antiguas no se migran automáticamente: si una URL anterior no carga, vuelve a subir ese archivo desde el panel.
+
+
+ACTUALIZACIÓN DE PORTAFOLIO
+- Cada proyecto ahora funciona como un evento con portada y galería.
+- En Administración > Portafolio crea o edita un evento, selecciona portada y varias fotografías de galería.
+- En la web, cada tarjeta abre galeria.html en una pestaña nueva.
+- Los logotipos se muestran sobre fondo oscuro/transparente; se recomienda subir PNG con transparencia cuando el archivo original lo permita.
+- Cloudinary usa el Cloud name bktloafr y el preset unsigned jeyr_unsigned. No introduzcas API Secret.

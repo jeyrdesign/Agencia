@@ -33,13 +33,18 @@ async function loadSettings() {
 }
 function renderPortfolio(items) {
   const grid = $("#portfolio-grid");
+  if (!grid) return;
   if (!items.length) return;
-  grid.innerHTML = items.slice(0,6).map((x,i) => `
-    <article class="portfolio-item">
-      ${x.mediaType === "video" ? `<video src="${esc(x.mediaUrl)}" muted controls playsinline preload="metadata"></video>` : `<img src="${esc(x.mediaUrl || x.imageUrl || "")}" alt="${esc(x.title)}" loading="lazy">`}
-      <div class="portfolio-caption"><small>${esc(x.category || "PROYECTO")}</small><b>${esc(x.title || "JEYR DESIGN")}</b></div>
-    </article>`).join("");
-  $("#portfolio-note").textContent = "Proyectos seleccionados de JEYR DESIGN.";
+  grid.innerHTML = items.slice(0,9).map((x,i) => {
+    const cover=x.coverUrl||x.mediaUrl||x.imageUrl||"";
+    const count=Number(x.galleryCount??x.galleryImages?.length??0);
+    return `<a class="portfolio-item portfolio-event" href="galeria.html?id=${encodeURIComponent(x.id)}" target="_blank" rel="noopener" aria-label="Abrir galería ${esc(x.title)}">
+      ${cover ? `<img src="${esc(cover)}" alt="${esc(x.title)}" loading="lazy">` : `<div class="portfolio-event-empty">JEYR DESIGN</div>`}
+      <div class="portfolio-caption"><small>${esc(x.category || "PROYECTO")} · ${count} FOTOGRAFÍAS</small><b>${esc(x.title || "JEYR DESIGN")}</b><span class="portfolio-open">Ver galería ↗</span></div>
+    </a>`;
+  }).join("");
+  $("#portfolio-note").textContent = "Selecciona un evento para explorar su galería completa.";
+  document.dispatchEvent(new Event("jeyr:content-updated"));
 }
 function renderBrands(items) {
   const row = $("#brands-row");
