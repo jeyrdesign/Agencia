@@ -17,7 +17,7 @@
 ## Límites de la revisión
 No se ejecutó una sesión real en el dominio publicado ni se pudo confirmar el rendimiento real de Firestore/Cloudinary desde el navegador del visitante. Por eso, la publicación debe verificarse después en escritorio y móvil, especialmente el acceso al administrador, el envío de formularios y la carga de logotipos.
 
-- El administrador optimiza automáticamente imágenes raster que superan 9,5 MB antes de subirlas a Cloudinary: convierte a WebP, ajusta calidad y reduce dimensiones progresivamente hasta quedar bajo el límite de 10 MB. Los SVG se conservan como vector y, si superan el límite, se solicita optimizarlos por separado. Los videos ahora se administran mediante enlaces de YouTube y no se cargan a Cloudinary.
+- El administrador optimiza automáticamente cada imagen raster que supera 9,5 MB antes de subirla a Cloudinary: convierte a WebP, ajusta calidad y reduce dimensiones progresivamente hasta quedar bajo el límite individual de 10 MB. El límite es por archivo, no por galería; las fotografías nuevas se cargan secuencialmente para reducir picos de memoria y poder identificar cuál falla. Los SVG se conservan como vector y, si superan el límite, se solicita optimizarlos por separado. Los videos ahora se administran mediante enlaces de YouTube y no se cargan a Cloudinary.
 
 - Se añadió el apartado Administración > Videos de YouTube para registrar, editar, publicar, ocultar y eliminar videos mediante URL.
 - Los videos publicados se incorporan al portafolio completo, respetan los filtros por disciplina y abren una página con el reproductor de YouTube en modo de privacidad mejorada.
