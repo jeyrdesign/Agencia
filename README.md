@@ -64,3 +64,7 @@ No configures Firebase Storage ni publiques reglas de Storage. El archivo `admin
 - Cada página consulta los paquetes publicados en Firestore y filtra por su categoría. En el administrador, al crear o editar un paquete, selecciona una de las cuatro categorías disponibles para que aparezca en la página correcta.
 - Los botones de consulta abren WhatsApp con el nombre del paquete.
 - Google Drive no forma parte de esta arquitectura. Cloudinary gestiona los medios y Firebase Firestore conserva los datos y enlaces.
+
+
+### Actualización del holograma
+El recurso `assets/img/hero-hologram.svg` reemplaza el retrato/silueta anterior por una composición vectorial abstracta de ondas, anillos y luz cian/azul. No contiene personas ni siluetas. `index.html` ya apunta al nuevo SVG.
