@@ -6,10 +6,10 @@ import {
 } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 
 const $ = s => document.querySelector(s);
-const S = { user:null, data:{portfolio:[],brands:[],packages:[],messages:[]}, loaded:{}, kind:null, item:null, busy:false, analytics:[] };
+const S = { user:null, data:{portfolio:[],videos:[],brands:[],packages:[],messages:[]}, loaded:{}, kind:null, item:null, busy:false, analytics:[] };
 const CLOUDINARY_DEFAULTS = { cloudName:"bktloafr", uploadPreset:"jeyr_unsigned" };
 let cloudConfigPromise = null;
-const names = {overview:"Resumen general",portfolio:"Portafolio",brands:"Marcas colaboradoras",packages:"Servicios y paquetes",messages:"Mensajes",analytics:"Estadísticas",settings:"Configuración"};
+const names = {overview:"Resumen general",portfolio:"Portafolio",videos:"Videos de YouTube",brands:"Marcas colaboradoras",packages:"Servicios y paquetes",messages:"Mensajes",analytics:"Estadísticas",settings:"Configuración"};
 const esc = s => String(s ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const normalize = s => String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("es").replace(/[^a-z0-9]+/g," ").trim().replace(/\s+/g," ");
 const note = s => { $("#notice").textContent = s; };
@@ -34,6 +34,7 @@ async function go(view) {
   $("#title").textContent=names[view]||"JEYR ADMIN";
   try {
     if(view==="portfolio"){await rows("portfolio");drawPortfolio();}
+    if(view==="videos"){await rows("videos");drawVideos();}
     if(view==="brands"){await rows("brands");drawBrands();}
     if(view==="packages"){await rows("packages");drawPackages();}
     if(view==="messages") await drawMessages();
@@ -80,14 +81,57 @@ async function cloudinaryConfig() {
   })().catch(err=>{cloudConfigPromise=null;throw err;});
   return cloudConfigPromise;
 }
+const IMAGE_LIMIT = 10*1024*1024;
+const IMAGE_TARGET = 9.5*1024*1024;
+
+async function compressImageIfNeeded(file) {
+  if(file.size<=IMAGE_TARGET) return file;
+  if(file.type==="image/svg+xml") throw new Error("Este SVG supera 10 MB. Optimízalo como SVG o expórtalo a PNG/WebP antes de subirlo.");
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type)) throw new Error("Formato de imagen no compatible para optimización. Usa JPG, PNG, WEBP o SVG.");
+  note(`Optimizando ${file.name} (${(file.size/1024/1024).toFixed(1)} MB)…`);
+  let bitmap;
+  try {
+    bitmap=await createImageBitmap(file);
+    const canvas=document.createElement("canvas");
+    const ctx=canvas.getContext("2d",{alpha:true});
+    if(!ctx) throw new Error("El navegador no pudo preparar la imagen.");
+    let scale=Math.min(1,3000/Math.max(bitmap.width,bitmap.height));
+    let blob=null;
+    for(let resize=0;resize<8;resize++){
+      canvas.width=Math.max(1,Math.round(bitmap.width*scale));
+      canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);
+      for(const quality of [0.88,0.82,0.76,0.70,0.64,0.58,0.52]){
+        blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/webp",quality));
+        if(blob&&blob.size<=IMAGE_TARGET) {
+          const base=file.name.replace(/\.[^.]+$/,"")||"imagen";
+          const optimized=new File([blob],`${base}.webp`,{type:"image/webp",lastModified:Date.now()});
+          note(`Imagen optimizada: ${(file.size/1024/1024).toFixed(1)} MB → ${(optimized.size/1024/1024).toFixed(1)} MB.`);
+          return optimized;
+        }
+      }
+      scale*=0.82;
+    }
+    throw new Error("No se pudo reducir esta imagen por debajo de 10 MB sin una pérdida excesiva. Reduce sus dimensiones y vuelve a intentarlo.");
+  } catch(err) {
+    if(err?.message?.includes("10 MB")||err?.message?.includes("SVG")||err?.message?.includes("compatible")) throw err;
+    throw new Error(err?.message||"No se pudo optimizar la imagen en este navegador.");
+  } finally {
+    bitmap?.close?.();
+  }
+}
+
 async function uploadToCloudinary(file,folder,resourceType="image") {
   if(!file||!file.size) throw new Error("Selecciona un archivo.");
-  const isVideo=resourceType==="video", max=isVideo?100*1024*1024:10*1024*1024;
-  if(file.size>max) throw new Error(`El archivo supera el límite de ${isVideo?"100 MB":"10 MB"}.`);
+  const isVideo=resourceType==="video", max=isVideo?100*1024*1024:IMAGE_LIMIT;
+  if(isVideo&&file.size>max) throw new Error("El video supera el límite de 100 MB.");
   const allowed=isVideo?["video/mp4","video/webm"]:["image/jpeg","image/png","image/webp","image/svg+xml"];
   if(!allowed.includes(file.type)) throw new Error(isVideo?"Usa MP4 o WEBM.":"Usa JPG, PNG, WEBP o SVG.");
+  const uploadFile=isVideo?file:await compressImageIfNeeded(file);
+  if(uploadFile.size>max) throw new Error(`La imagen sigue superando el límite de 10 MB después de optimizarla.`);
   const {cloudName,uploadPreset}=await cloudinaryConfig();
-  const body=new FormData(); body.append("file",file); body.append("upload_preset",uploadPreset); body.append("folder",`jeyr-design/${folder}`);
+  const body=new FormData(); body.append("file",uploadFile); body.append("upload_preset",uploadPreset); body.append("folder",`jeyr-design/${folder}`);
   const endpoint=`https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/${isVideo?"video":"image"}/upload`;
   let response;
   try { response=await fetch(endpoint,{method:"POST",body}); } catch { throw new Error("No se pudo conectar con Cloudinary. Comprueba tu conexión."); }
@@ -103,6 +147,19 @@ async function fingerprint(file) {
   }
   return `${normalize(file.name)}-${file.size}-${file.lastModified}`;
 }
+function parseYouTubeId(value) {
+  const raw=String(value||"").trim();
+  if(/^[A-Za-z0-9_-]{11}$/.test(raw)) return raw;
+  let url; try { url=new URL(raw); } catch { return ""; }
+  const host=url.hostname.toLowerCase().replace(/^www\./,"");
+  if(!(host==="youtu.be"||host==="youtube.com"||host.endsWith(".youtube.com")||host==="youtube-nocookie.com")) return "";
+  let id="";
+  if(host==="youtu.be") id=url.pathname.split("/").filter(Boolean)[0]||"";
+  else if(url.pathname==="/watch") id=url.searchParams.get("v")||"";
+  else { const parts=url.pathname.split("/").filter(Boolean); if(["embed","shorts","live","v"].includes(parts[0])) id=parts[1]||""; }
+  return /^[A-Za-z0-9_-]{11}$/.test(id)?id:"";
+}
+
 function duplicateKey(kind,data) {
   if(kind==="brands") return normalize(data.name);
   if(kind==="packages") return `${normalize(data.name)}|${normalize(data.category)}`;
@@ -141,6 +198,15 @@ function editor(kind,item=null) {
     ${Array.isArray(item?.galleryImages)&&item.galleryImages.length?`<div class="wide existing-gallery-wrap"><b>Fotografías actuales</b><p class="hint">Marca las que deseas quitar de esta galería.</p><div class="existing-gallery">${item.galleryImages.map((photo,i)=>{const url=typeof photo==="string"?photo:photo?.url;const name=typeof photo==="object"?(photo.name||`Fotografía ${i+1}`):`Fotografía ${i+1}`;return `<label class="existing-photo"><input type="checkbox" name="removeGallery" value="${i}"><img src="${esc(url||"")}" alt=""><span>${esc(name)}</span></label>`;}).join("")}</div></div>`:""}
     <label>Publicado<select name="published"><option value="true" ${item?.published!==false?"selected":""}>Sí</option><option value="false" ${item?.published===false?"selected":""}>No</option></select></label>
     <div class="wide hint">${item?.galleryImages?.length||0} fotografías guardadas.</div>`;
+  if(kind==="videos") html=`
+    <label class="wide">Título del video<input name="title" required maxlength="100" value="${esc(item?.title)}"></label>
+    <label>Categoría<select name="category" required>
+      ${["Producción audiovisual","Fotografía","Eventos","Deportes","XV años","Diseño gráfico","Branding",...(item?.category&&!['Producción audiovisual','Fotografía','Eventos','Deportes','XV años','Diseño gráfico','Branding'].includes(item.category)?[item.category]:[])].map(v=>`<option value="${esc(v)}" ${item?.category===v?"selected":(!item&&v==="Producción audiovisual"?"selected":"")}>${esc(v)}</option>`).join("")}
+    </select></label>
+    <label class="wide">Enlace de YouTube<input name="youtubeUrl" type="url" required placeholder="https://www.youtube.com/watch?v=..." value="${esc(item?.youtubeUrl)}"></label>
+    <p class="hint wide">Acepta enlaces de YouTube normales, Shorts y youtu.be. El video debe estar Público o No listado para poder reproducirse en la web.</p>
+    <label class="wide">Descripción<textarea name="description" maxlength="1200">${esc(item?.description)}</textarea></label>
+    <label>Publicado<select name="published"><option value="true" ${item?.published!==false?"selected":""}>Sí</option><option value="false" ${item?.published===false?"selected":""}>No</option></select></label>`;
   if(kind==="brands") html=`
     <label>Nombre de la marca<input name="name" required maxlength="100" value="${esc(item?.name)}"></label>
     <label>Logotipo<input name="media" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" ${item?"":"required"}></label>
@@ -155,11 +221,11 @@ function editor(kind,item=null) {
     <label>Publicado<select name="published"><option value="true" ${item?.published!==false?"selected":""}>Sí</option><option value="false" ${item?.published===false?"selected":""}>No</option></select></label>
     <label class="wide">Descripción<textarea name="description" maxlength="1200">${esc(item?.description)}</textarea></label>
     <label class="wide">Incluye (una línea por elemento)<textarea name="features">${esc((item?.features||[]).join("\n"))}</textarea></label>`;
-  $("#editor-title").textContent=(item?"Editar ":"Nuevo ")+({portfolio:"proyecto",brands:"marca",packages:"paquete"}[kind]);
+  $("#editor-title").textContent=(item?"Editar ":"Nuevo ")+({portfolio:"proyecto",videos:"video de YouTube",brands:"marca",packages:"paquete"}[kind]);
   $("#fields").innerHTML=html; $("#editor").showModal();
 }
 $("#close").onclick=$("#cancel").onclick=()=>$("#editor").close();
-$("#new-portfolio").onclick=()=>editor("portfolio"); $("#new-brand").onclick=()=>editor("brands"); $("#new-package").onclick=()=>editor("packages");
+$("#new-portfolio").onclick=()=>editor("portfolio"); $("#new-video").onclick=()=>editor("videos"); $("#new-brand").onclick=()=>editor("brands"); $("#new-package").onclick=()=>editor("packages");
 $("#editor-form").addEventListener("submit",async e=>{
   e.preventDefault(); if(S.busy)return; S.busy=true;
   const form=e.currentTarget, submit=form.querySelector('button[type="submit"]')||form.querySelector('footer button:last-child');
@@ -188,6 +254,18 @@ $("#editor-form").addEventListener("submit",async e=>{
       if(!galleryImages.length&&item?.mediaUrl&&!item?.galleryImages?.length&&item.mediaType!=="video") galleryImages.push({url:item.mediaUrl,name:item.title||"Fotografía"});
       Object.assign(data,{coverUrl,mediaUrl:coverUrl,mediaType:"image",galleryImages,galleryCount:galleryImages.length});
     }
+    if(kind==="videos") {
+      data.title=String(f.get("title")||"").trim();
+      data.category=String(f.get("category")||"Producción audiovisual").trim();
+      data.description=String(f.get("description")||"").trim();
+      const suppliedUrl=String(f.get("youtubeUrl")||"").trim();
+      const youtubeId=parseYouTubeId(suppliedUrl);
+      if(!youtubeId) throw new Error("El enlace no parece ser un video válido de YouTube. Comprueba la URL.");
+      if(S.data.videos.some(x=>x.id!==item?.id&&x.youtubeId===youtubeId)) throw new Error("Este video de YouTube ya está registrado.");
+      data.youtubeId=youtubeId;
+      data.youtubeUrl=`https://www.youtube.com/watch?v=${youtubeId}`;
+      data.platform="youtube";
+    }
     if(kind==="brands") {
       data.name=String(f.get("name")||"").trim(); data.url=String(f.get("url")||"").trim();
       const key=duplicateKey(kind,data), local=S.data.brands.find(x=>x.id!==item?.id&&duplicateKey(kind,x)===key);
@@ -207,7 +285,7 @@ $("#editor-form").addEventListener("submit",async e=>{
     await saveRecord(kind,item,data);
     $("#editor").close(); note("Registro guardado correctamente.");
     await rows(kind,true);
-    ({portfolio:drawPortfolio,brands:drawBrands,packages:drawPackages}[kind])();
+    ({portfolio:drawPortfolio,videos:drawVideos,brands:drawBrands,packages:drawPackages}[kind])();
     await overview();
   } catch(err){console.error(err);note(readableError(err));}
   finally{S.busy=false;if(submit){submit.disabled=false;submit.textContent="Guardar";}}
@@ -219,11 +297,12 @@ function bindCards(){
   document.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{
     if(!confirm("¿Eliminar este registro? Esta acción no se puede deshacer."))return;
     b.disabled=true;
-    try{await deleteDoc(doc(db,b.dataset.del,b.dataset.id));await rows(b.dataset.del,true);({portfolio:drawPortfolio,brands:drawBrands,packages:drawPackages}[b.dataset.del])();await overview();note("Registro eliminado.");}
+    try{await deleteDoc(doc(db,b.dataset.del,b.dataset.id));await rows(b.dataset.del,true);({portfolio:drawPortfolio,videos:drawVideos,brands:drawBrands,packages:drawPackages}[b.dataset.del])();await overview();note("Registro eliminado.");}
     catch(err){console.error(err);note(readableError(err));b.disabled=false;}
   });
 }
 function drawPortfolio(){const a=S.data.portfolio;$("#portfolio-list").innerHTML=a.map(x=>`<article class="card">${(x.coverUrl||x.mediaUrl)?`<img src="${esc(x.coverUrl||x.mediaUrl)}" alt="${esc(x.title)}" loading="lazy" decoding="async">`:""}<h3>${esc(x.title)}</h3><p>${esc(x.category)} · ${Number(x.galleryCount??x.galleryImages?.length??0)} fotografías · ${x.published?"Publicado":"Oculto"}</p>${cardActions("portfolio",x.id)}</article>`).join("")||"Sin eventos todavía.";bindCards();}
+function drawVideos(){const a=S.data.videos;$("#videos-list").innerHTML=a.map(x=>`<article class="card"><a class="video-admin-thumb" href="${esc(x.youtubeUrl||`https://www.youtube.com/watch?v=${x.youtubeId||""}`)}" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/${encodeURIComponent(x.youtubeId||"")}/hqdefault.jpg" alt="Miniatura de ${esc(x.title)}" loading="lazy" decoding="async"><span>▶</span></a><h3>${esc(x.title)}</h3><p>${esc(x.category)} · ${x.published?"Publicado":"Oculto"}</p><a class="video-admin-link" href="${esc(x.youtubeUrl||`https://www.youtube.com/watch?v=${x.youtubeId||""}`)}" target="_blank" rel="noopener">Ver en YouTube ↗</a>${cardActions("videos",x.id)}</article>`).join("")||"Todavía no has agregado videos.";bindCards();}
 function drawBrands(){const a=S.data.brands;$("#brands-list").innerHTML=a.map(x=>`<article class="card"><img src="${esc(x.logoUrl||"")}" alt="${esc(x.name)}" loading="lazy" decoding="async"><h3>${esc(x.name)}</h3><p>${x.published?"Publicado":"Oculto"}</p>${cardActions("brands",x.id)}</article>`).join("")||"Sin marcas.";bindCards();}
 function drawPackages(){const a=S.data.packages;$("#packages-list").innerHTML=a.map(x=>`<article class="card"><h3>${esc(x.name)}</h3><b>$${Number(x.price||0).toFixed(2)} desde</b><p>${esc(x.description)}</p><ul>${(x.features||[]).map(y=>`<li>${esc(y)}</li>`).join("")}</ul><p>${x.published?"Publicado":"Oculto"}</p>${cardActions("packages",x.id)}</article>`).join("")||"Sin paquetes.";bindCards();}
 async function drawMessages(){const all=await rows("messages",true),filter=$("#message-filter").value,a=all.filter(x=>filter==="all"||(x.status||"new")===filter);$("#messages-list").innerHTML=a.map(x=>`<article class="message"><b>${esc(x.name||"Sin nombre")}</b> · ${esc(x.email||"")} · ${esc(x.phone||"")}<p>${esc(x.message||"")}</p><small>${esc(x.status||"new")}</small><div class="actions"><button type="button" data-read="${esc(x.id)}">Marcar leído</button><button type="button" data-replied="${esc(x.id)}">Respondido</button>${x.phone?`<a href="https://wa.me/${String(x.phone).replace(/\D/g,"")}" target="_blank" rel="noopener">WhatsApp</a>`:""}</div></article>`).join("")||"Sin mensajes.";

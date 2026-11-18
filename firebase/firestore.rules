@@ -16,6 +16,10 @@ service cloud.firestore {
       allow read: if resource.data.published == true || owner();
       allow create, update, delete: if owner();
     }
+    match /videos/{id} {
+      allow read: if resource.data.published == true || owner();
+      allow create, update, delete: if owner();
+    }
     match /brands/{id} {
       allow read: if resource.data.published == true || owner();
       allow create, update, delete: if owner();
