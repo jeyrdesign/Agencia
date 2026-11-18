@@ -1,18 +1,25 @@
 import { db } from "../../admin/js/firebase.js";
-import { collection, getDocs, query, where, orderBy, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+import { collection, getDocs, query, where, addDoc, serverTimestamp, doc, getDoc, limit } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 
 const $ = (s) => document.querySelector(s);
 const esc = (v="") => String(v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const whatsappDefault = "593980478748";
+const normalize = value => String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("es").replace(/[^a-z0-9]+/g," ").trim();
+function uniqueBy(items,keyFn){const seen=new Set();return items.filter(item=>{const key=keyFn(item);if(!key||seen.has(key))return false;seen.add(key);return true;});}
+function optimizedImage(url,width=1000){const value=String(url||"");if(!value.includes("res.cloudinary.com")||!value.includes("/image/upload/")||value.includes("f_auto"))return value;return value.replace("/image/upload/",`/image/upload/f_auto,q_auto,w_${width},c_limit/`);}
+
 $("#year").textContent = new Date().getFullYear();
 $("#menu-toggle").addEventListener("click", () => $("#main-nav").classList.toggle("open"));
 document.querySelectorAll("#main-nav a").forEach(a => a.addEventListener("click", () => $("#main-nav").classList.remove("open")));
 
 async function getPublished(name) {
   try {
-    const q = query(collection(db, name), where("published", "==", true));
+    const cap = name === "portfolio" ? 60 : 80;
+    const q = query(collection(db, name), where("published", "==", true), limit(cap));
     const snap = await getDocs(q);
-    return snap.docs.map(d => ({id:d.id, ...d.data()}));
+    const items = snap.docs.map(d => ({id:d.id, ...d.data()}));
+    items.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
+    return items;
   } catch (e) {
     console.warn(`No se pudo cargar ${name}`, e);
     return [];
@@ -32,14 +39,16 @@ async function loadSettings() {
   } catch(e) { console.warn("Configuración pública no disponible", e); }
 }
 function renderPortfolio(items) {
+  items=uniqueBy(items,x=>`${normalize(x.title)}|${normalize(x.category)}`);
   const grid = $("#portfolio-grid");
   if (!grid) return;
   if (!items.length) return;
   grid.innerHTML = items.slice(0,9).map((x,i) => {
     const cover=x.coverUrl||x.mediaUrl||x.imageUrl||"";
-    const count=Number(x.galleryCount??x.galleryImages?.length??0);
+    const photos=Array.isArray(x.galleryImages)?uniqueBy(x.galleryImages,p=>typeof p==="string"?p:(p?.hash||p?.url)):[];
+    const count=photos.length || Number(x.galleryCount||0);
     return `<a class="portfolio-item portfolio-event" href="galeria.html?id=${encodeURIComponent(x.id)}" aria-label="Abrir galería ${esc(x.title)}">
-      ${cover ? `<img src="${esc(cover)}" alt="${esc(x.title)}" loading="lazy">` : `<div class="portfolio-event-empty">JEYR DESIGN</div>`}
+      ${cover ? `<img src="${esc(optimizedImage(cover,900))}" alt="${esc(x.title)}" loading="lazy" decoding="async">` : `<div class="portfolio-event-empty">JEYR DESIGN</div>`}
       <div class="portfolio-caption"><small>${esc(x.category || "PROYECTO")} · ${count} FOTOGRAFÍAS</small><b>${esc(x.title || "JEYR DESIGN")}</b><span class="portfolio-open">Ver galería ↗</span></div>
     </a>`;
   }).join("");
@@ -47,6 +56,7 @@ function renderPortfolio(items) {
   document.dispatchEvent(new Event("jeyr:content-updated"));
 }
 function renderBrands(items) {
+  items=uniqueBy(items,x=>x.logoHash||x.logoUrl||normalize(x.name));
   const row = $("#brands-row");
   if (!row) return;
   if (!items.length) {
@@ -56,7 +66,7 @@ function renderBrands(items) {
   row.innerHTML = items.slice(0,12).map(x => `
     <div class="brand-tile" title="${esc(x.name || 'Marca colaboradora')}">
       ${x.logoUrl
-        ? `<img class="brand-logo" src="${esc(x.logoUrl)}" alt="${esc(x.name || 'Logotipo de marca')}" loading="lazy">`
+        ? `<img class="brand-logo" src="${esc(optimizedImage(x.logoUrl,420))}" alt="${esc(x.name || 'Logotipo de marca')}" loading="lazy" decoding="async">`
         : `<span class="brand-name-fallback">${esc(x.name || 'Marca colaboradora')}</span>`}
     </div>`).join("");
   row.querySelectorAll(".brand-logo").forEach(img => img.addEventListener("error", () => {
@@ -86,6 +96,6 @@ $("#contact-form").addEventListener("submit", async (e) => {
   } finally { button.disabled = false; button.innerHTML = 'Enviar consulta <span>↗</span>'; }
 });
 (async function init(){
-  await Promise.all([loadSettings(), getPublished("portfolio").then(renderPortfolio), getPublished("brands").then(renderBrands)]);
   track("page_view");
+  await Promise.all([loadSettings(), getPublished("portfolio").then(renderPortfolio), getPublished("brands").then(renderBrands)]);
 })();

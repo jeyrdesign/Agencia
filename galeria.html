@@ -12,12 +12,13 @@
     @media(max-width:520px){.gallery-grid{grid-template-columns:1fr;gap:10px}.gallery-photo{aspect-ratio:5/4}.gallery-hero{padding-top:45px}.lightbox{padding:12px}}
     @media(prefers-reduced-motion:reduce){.gallery-photo img{transition:none}}
   </style>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin><link rel="preconnect" href="https://firestore.googleapis.com"><link rel="preconnect" href="https://res.cloudinary.com">
 </head>
 <body>
   <div class="noise"></div>
-  <header class="site-header"><nav id="main-nav"><a href="index.html#nosotros">Nosotros</a><a href="index.html#servicios">Servicios</a><a href="index.html#portafolio">Portafolio</a><a class="nav-cta" href="index.html#contacto">Hablemos <span>↗</span></a></nav><button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">☰</button></header>
+  <header class="site-header"><a class="brand" href="index.html"><img class="brand-logo-mark" src="assets/img/jeyr-logo.svg" alt="JEYR DESIGN"></a><nav id="main-nav"><a href="index.html#nosotros">Nosotros</a><a href="index.html#servicios">Servicios</a><a href="index.html#portafolio">Portafolio</a><a class="nav-cta" href="index.html#contacto">Hablemos <span>↗</span></a></nav><button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">☰</button></header>
   <main class="section-wrap"><section class="gallery-hero"><div class="section-kicker">JEYR DESIGN / PORTAFOLIO</div><h1 id="gallery-title">Cargando galería<span>…</span></h1><p class="gallery-description" id="gallery-description"></p><a class="gallery-back" href="index.html#portafolio">← Volver al portafolio</a></section><section id="gallery-grid" class="gallery-grid"><p class="gallery-loading">Preparando fotografías…</p></section></main>
-  <footer class="site-footer"><p>Los mejores, con los mejores.</p><div><a href="https://www.instagram.com/jeyrdesign/" target="_blank" rel="noopener">Instagram ↗</a><a href="index.html">Inicio</a></div><small>© <span id="year"></span> JEYR DESIGN · Babahoyo, Ecuador</small></footer>
+  <footer class="site-footer"><p class="footer-slogan">Los mejores, <em>con los mejores.</em></p><div><a href="https://www.instagram.com/jeyrdesign/" target="_blank" rel="noopener">Instagram ↗</a><a href="index.html">Inicio</a></div><small>© <span id="year"></span> JEYR DESIGN · Babahoyo, Ecuador</small></footer>
   <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Fotografía ampliada"><button id="lightbox-close" aria-label="Cerrar">×</button><img id="lightbox-image" alt="Fotografía ampliada"></div>
   <script type="module" src="assets/js/gallery.js"></script><script src="assets/js/motion.js" defer></script>
 </body></html>

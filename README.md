@@ -42,23 +42,17 @@ No configures Firebase Storage ni publiques reglas de Storage. El archivo `admin
 
 
 ## Ajustes visuales de interfaz
-- Logotipo original JEYR DESIGN recortado a su proporción horizontal y reducido para cabecera, pie y panel administrativo.
+- Logotipo original JEYR DESIGN se mantiene en el encabezado y panel administrativo; no se repite en el pie de página.
 - Favicon con isotipo original sobre fondo oscuro y acento turquesa eléctrico/azul.
 - Retirada de la franja de valores 01–04 bajo “Dónde nace JEYR DESIGN”.
 - Servicio “Contenido digital” renombrado a “Paquetes Digitales” en la interfaz pública.
-- Sección de marcas con tarjetas uniformes, fondos claros y logotipos centrados para mantener una presentación ordenada.
+- Sección de marcas con tarjetas oscuras y logotipos centrados para mantener una presentación ordenada.
 - Paleta turquesa más azulada y eléctrica, sin tonos menta/pastel.
 
 
-## Actualización del holograma de portada
-- Se integró el retrato proporcionado como una proyección holográfica PNG con transparencia, color azul/turquesa eléctrico, brillo y líneas de escaneo.
-- La fotografía se superpone dentro del mismo rectángulo inclinado `.hero-image`; no se cambian su estructura, órbitas, tarjetas flotantes, textos ni composición.
-- El archivo está en `assets/img/hero-hologram.png`. Mantén esa ruta al publicar.
-- Se redujo el logotipo original en cabecera y pie, con una escala menor adicional en móvil.
-
 ## Catálogo de paquetes en páginas independientes
 - La página principal ya no contiene todos los paquetes en una sola sección.
-- El menú y las tarjetas de servicios abren el catálogo en una pestaña nueva.
+- El menú, las tarjetas de servicios y los enlaces internos abren el contenido en la misma pestaña. Los enlaces externos de WhatsApp e Instagram siguen abriendo aparte.
 - `paquetes/index.html` funciona como índice de categorías.
 - Cada categoría tiene su propia página: `paquetes/diseno.html`, `paquetes/fotografia.html`, `paquetes/audiovisual.html` y `paquetes/digitales.html`.
 - Cada página consulta los paquetes publicados en Firestore y filtra por su categoría. En el administrador, al crear o editar un paquete, selecciona una de las cuatro categorías disponibles para que aparezca en la página correcta.
@@ -68,3 +62,13 @@ No configures Firebase Storage ni publiques reglas de Storage. El archivo `admin
 
 ### Actualización del holograma
 El recurso `assets/img/hero-hologram.svg` reemplaza el retrato/silueta anterior por una composición vectorial abstracta de ondas, anillos y luz cian/azul. No contiene personas ni siluetas. `index.html` ya apunta al nuevo SVG.
+
+## Revisión integral y rendimiento
+- Se alternan fondos azul noche, azul profundo y azul petróleo para dar jerarquía a las secciones.
+- La frase «Los mejores, con los mejores» queda como cierre del sitio; se eliminó el bloque intermedio de firma y el logotipo del footer.
+- Las imágenes de Cloudinary se entregan con formato/calidad automáticos y tamaños ajustados a cada vista.
+- El dashboard carga correctamente Marcas, reutiliza datos ya consultados y corrige el contador de vistas.
+- Las estadísticas muestran vistas de página, mensajes recibidos y actividad diaria en períodos de 7, 30 o 90 días. No representan usuarios únicos.
+- Se evita crear paquetes, eventos y marcas duplicados. Las fotos repetidas se detectan por huella de archivo y se pueden quitar individualmente desde el editor de galerías.
+- Se filtran duplicados antiguos en las vistas públicas sin borrar documentos existentes.
+- Consulta `REVISION_TECNICA.md` para conocer el alcance, las verificaciones y los límites técnicos de esta versión.
