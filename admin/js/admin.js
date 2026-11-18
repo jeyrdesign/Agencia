@@ -129,7 +129,7 @@ async function uploadToCloudinary(file,folder,resourceType="image") {
   const allowed=isVideo?["video/mp4","video/webm"]:["image/jpeg","image/png","image/webp","image/svg+xml"];
   if(!allowed.includes(file.type)) throw new Error(isVideo?"Usa MP4 o WEBM.":"Usa JPG, PNG, WEBP o SVG.");
   const uploadFile=isVideo?file:await compressImageIfNeeded(file);
-  if(uploadFile.size>max) throw new Error(`La imagen sigue superando el límite de 10 MB después de optimizarla.`);
+  if(uploadFile.size>max) throw new Error(`La fotografía sigue superando el límite individual de 10 MB después de optimizarla.`);
   const {cloudName,uploadPreset}=await cloudinaryConfig();
   const body=new FormData(); body.append("file",uploadFile); body.append("upload_preset",uploadPreset); body.append("folder",`jeyr-design/${folder}`);
   const endpoint=`https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/${isVideo?"video":"image"}/upload`;
@@ -194,7 +194,7 @@ function editor(kind,item=null) {
     <label class="wide">Descripción<textarea name="description" maxlength="1200">${esc(item?.description)}</textarea></label>
     <label>Portada del evento<input name="cover" type="file" accept="image/png,image/jpeg,image/webp"></label>
     <label>Fotografías de la galería<input name="gallery" type="file" accept="image/png,image/jpeg,image/webp" multiple></label>
-    <p class="hint wide">Puedes seleccionar varias fotos. Se omitirán archivos repetidos dentro de esta galería y se conservarán las fotografías ya guardadas.</p>
+    <p class="hint wide">Puedes seleccionar varias fotos. El límite de 10 MB se aplica a cada fotografía por separado, no al peso total de la galería. Las imágenes que superen 9,5 MB se optimizan automáticamente. Se omitirán archivos repetidos y se conservarán las fotografías ya guardadas.</p>
     ${Array.isArray(item?.galleryImages)&&item.galleryImages.length?`<div class="wide existing-gallery-wrap"><b>Fotografías actuales</b><p class="hint">Marca las que deseas quitar de esta galería.</p><div class="existing-gallery">${item.galleryImages.map((photo,i)=>{const url=typeof photo==="string"?photo:photo?.url;const name=typeof photo==="object"?(photo.name||`Fotografía ${i+1}`):`Fotografía ${i+1}`;return `<label class="existing-photo"><input type="checkbox" name="removeGallery" value="${i}"><img src="${esc(url||"")}" alt=""><span>${esc(name)}</span></label>`;}).join("")}</div></div>`:""}
     <label>Publicado<select name="published"><option value="true" ${item?.published!==false?"selected":""}>Sí</option><option value="false" ${item?.published===false?"selected":""}>No</option></select></label>
     <div class="wide hint">${item?.galleryImages?.length||0} fotografías guardadas.</div>`;
@@ -247,8 +247,16 @@ $("#editor-form").addEventListener("submit",async e=>{
       const newFiles=[];
       for(const file of files){const hash=await fingerprint(file);if(hashes.has(hash))continue;hashes.add(hash);newFiles.push({file,hash});}
       if(newFiles.length){
-        let index=0; const workers=Array.from({length:Math.min(3,newFiles.length)},async()=>{while(index<newFiles.length){const current=newFiles[index++];current.url=await uploadToCloudinary(current.file,"portfolio/galleries");}});
-        await Promise.all(workers);
+        // El límite de 10 MB se aplica a CADA archivo individual, nunca a la suma de la galería.
+        // La carga secuencial evita picos de memoria y facilita identificar exactamente qué foto falla.
+        for(const current of newFiles){
+          try {
+            note(`Subiendo fotografía ${newFiles.indexOf(current)+1} de ${newFiles.length}: ${current.file.name}`);
+            current.url=await uploadToCloudinary(current.file,"portfolio/galleries");
+          } catch(uploadError) {
+            throw new Error(`No se pudo subir "${current.file.name}": ${uploadError?.message||"error de carga"}`);
+          }
+        }
         newFiles.forEach(x=>galleryImages.push({url:x.url,name:x.file.name,hash:x.hash,size:x.file.size,createdAt:Date.now()}));
       }
       if(!galleryImages.length&&item?.mediaUrl&&!item?.galleryImages?.length&&item.mediaType!=="video") galleryImages.push({url:item.mediaUrl,name:item.title||"Fotografía"});

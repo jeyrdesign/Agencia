@@ -26,6 +26,21 @@ $("#year").textContent = new Date().getFullYear();
 $("#menu-toggle").addEventListener("click", () => $("#main-nav").classList.toggle("open"));
 document.querySelectorAll("#main-nav a").forEach(a => a.addEventListener("click", () => $("#main-nav").classList.remove("open")));
 
+// La tarjeta completa abre el portafolio de su categoría; el enlace interno conserva su destino de paquetes.
+document.querySelectorAll(".service-card[data-portfolio-url]").forEach(card => {
+  const navigateToCategory = event => {
+    if (event.target.closest(".service-action")) return;
+    const destination = card.dataset.portfolioUrl;
+    if (destination) window.location.assign(new URL(destination, document.baseURI).href);
+  };
+  card.addEventListener("click", navigateToCategory);
+  card.addEventListener("keydown", event => {
+    if (event.target !== card || (event.key !== "Enter" && event.key !== " ")) return;
+    event.preventDefault();
+    navigateToCategory(event);
+  });
+});
+
 async function getPublished(name) {
   try {
     const cap = name === "portfolio" ? 60 : 80;
@@ -52,21 +67,34 @@ async function loadSettings() {
     if (s.welcomeMessage) document.querySelector(".contact-left>p").textContent = s.welcomeMessage;
   } catch(e) { console.warn("Configuración pública no disponible", e); }
 }
+const portfolioPreviewCategories = [
+  {key:"diseno-branding",label:"Diseño gráfico & branding",terms:["diseno","diseño","branding","marca","identidad","logotipo","logo","pieza grafica","publicidad"]},
+  {key:"fotografia-profesional",label:"Fotografía profesional",terms:["fotografia","fotografía","foto","sesion","sesión","retrato","producto","evento","cobertura","deporte","deportiva","xv","quince"]},
+  {key:"audiovisual",label:"Producción audiovisual",terms:["audiovisual","video","vídeo","reel","produccion","producción","contenido audiovisual"]},
+  {key:"digitales",label:"Comunicación digital",terms:["digital","redes","social","community","campana","campaña","marketing","publicaciones","contenido"]}
+];
+function projectMatchesPreviewCategory(item, category) {
+  const text = normalize(`${item.category||""} ${item.title||""} ${item.description||""}`);
+  return category.terms.some(term => text.includes(normalize(term)));
+}
 function renderPortfolio(items) {
-  items=uniqueBy(items,x=>`${normalize(x.title)}|${normalize(x.category)}`);
   const grid = $("#portfolio-grid");
   if (!grid) return;
-  if (!items.length) return;
-  grid.innerHTML = items.slice(0,9).map((x,i) => {
-    const cover=x.coverUrl||x.mediaUrl||x.imageUrl||"";
-    const photos=Array.isArray(x.galleryImages)?uniqueBy(x.galleryImages,p=>typeof p==="string"?p:(p?.hash||p?.url)):[];
-    const count=photos.length || Number(x.galleryCount||0);
-    return `<a class="portfolio-item portfolio-event" href="galeria.html?id=${encodeURIComponent(x.id)}" aria-label="Abrir galería ${esc(x.title)}">
-      ${cover ? `<img src="${esc(optimizedImage(cover,900))}" alt="${esc(x.title)}" loading="lazy" decoding="async">` : `<div class="portfolio-event-empty">JEYR DESIGN</div>`}
-      <div class="portfolio-caption"><small>${esc(x.category || "PROYECTO")} · ${count} FOTOGRAFÍAS</small><b>${esc(x.title || "JEYR DESIGN")}</b><span class="portfolio-open">Ver galería ↗</span></div>
+  const uniqueItems = uniqueBy(items, x => `${normalize(x.title)}|${normalize(x.category)}`);
+  grid.classList.add("portfolio-category-grid");
+  grid.innerHTML = portfolioPreviewCategories.map((category,index) => {
+    const project = uniqueItems.find(item => projectMatchesPreviewCategory(item,category));
+    const cover = project?.coverUrl || project?.mediaUrl || project?.imageUrl || "";
+    const target = `galeria.html?categoria=${encodeURIComponent(category.key)}`;
+    const image = cover
+      ? `<img src="${esc(optimizedImage(cover,760))}" alt="${esc(category.label)}" loading="lazy" decoding="async">`
+      : `<div class="portfolio-category-fallback"><span>${String(index+1).padStart(2,"0")}</span><b>${esc(category.label)}</b></div>`;
+    return `<a class="portfolio-item portfolio-category-card" href="${target}" aria-label="Ver todos los proyectos de ${esc(category.label)}">
+      ${image}
+      <div class="portfolio-caption"><small>CATEGORÍA ${String(index+1).padStart(2,"0")}</small><b>${esc(category.label)}</b><span class="portfolio-open">Explorar categoría ↗</span></div>
     </a>`;
   }).join("");
-  $("#portfolio-note").textContent = "Selecciona un evento para explorar su galería completa.";
+  $("#portfolio-note").textContent = "Una vista previa de nuestras cuatro áreas creativas. Explora cada categoría o visita el portafolio completo.";
   document.dispatchEvent(new Event("jeyr:content-updated"));
 }
 function renderBrands(items) {
