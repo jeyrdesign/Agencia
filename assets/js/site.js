@@ -38,7 +38,7 @@ function renderPortfolio(items) {
   grid.innerHTML = items.slice(0,9).map((x,i) => {
     const cover=x.coverUrl||x.mediaUrl||x.imageUrl||"";
     const count=Number(x.galleryCount??x.galleryImages?.length??0);
-    return `<a class="portfolio-item portfolio-event" href="galeria.html?id=${encodeURIComponent(x.id)}" target="_blank" rel="noopener" aria-label="Abrir galería ${esc(x.title)}">
+    return `<a class="portfolio-item portfolio-event" href="galeria.html?id=${encodeURIComponent(x.id)}" aria-label="Abrir galería ${esc(x.title)}">
       ${cover ? `<img src="${esc(cover)}" alt="${esc(x.title)}" loading="lazy">` : `<div class="portfolio-event-empty">JEYR DESIGN</div>`}
       <div class="portfolio-caption"><small>${esc(x.category || "PROYECTO")} · ${count} FOTOGRAFÍAS</small><b>${esc(x.title || "JEYR DESIGN")}</b><span class="portfolio-open">Ver galería ↗</span></div>
     </a>`;

@@ -188,3 +188,21 @@ html{scroll-behavior:smooth;scroll-padding-top:100px}
   .portfolio-event,.portfolio-item,.portfolio-placeholder { min-height:220px; }
   .portfolio-event img,.portfolio-item img,.portfolio-item video { min-height:220px; }
 }
+
+
+/* Manifiesto de marca: firma JEYR reubicada junto a la presentación institucional */
+.brand-manifesto{margin:0;padding:42px 0;background:linear-gradient(105deg,rgba(8,35,52,.96),rgba(6,19,30,.98) 58%,rgba(5,13,22,.98));border-block:1px solid rgba(0,191,255,.22);position:relative;overflow:hidden}
+.brand-manifesto:before{content:"";position:absolute;width:420px;height:420px;right:8%;top:50%;transform:translateY(-50%);border:1px solid rgba(0,191,255,.10);border-radius:50%;box-shadow:0 0 0 34px rgba(0,191,255,.018),0 0 0 82px rgba(0,191,255,.014);pointer-events:none}
+.brand-manifesto .quote-inner{min-height:190px;display:grid;grid-template-columns:1fr 2.2fr auto;align-items:center;gap:34px;position:relative;z-index:1}
+.manifesto-kicker{display:flex;align-items:center;gap:13px;color:#8ca9b8}
+.manifesto-kicker>span{font-size:32px;line-height:1;color:var(--cyan);text-shadow:0 0 22px rgba(0,191,255,.5)}
+.manifesto-kicker small,.manifesto-signature small{font-size:9px;letter-spacing:.18em;line-height:1.6}
+.brand-manifesto .quote-inner p{font:800 clamp(38px,5.1vw,66px)/.98 var(--display);letter-spacing:-.065em;margin:0;white-space:nowrap}
+.brand-manifesto .quote-inner p>span{color:#f2fbff}
+.brand-manifesto .quote-inner em{color:var(--cyan)}
+.manifesto-signature{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:145px;padding-left:24px;border-left:1px solid rgba(0,191,255,.3)}
+.manifesto-signature b{font:800 11px var(--display);letter-spacing:.16em;color:#e9f8fc}
+.manifesto-signature small{color:#7f9ba9}
+.signature-line{display:block;width:32px;height:2px;background:linear-gradient(90deg,var(--cyan),transparent);margin-bottom:5px}
+@media(max-width:850px){.brand-manifesto{padding:34px 0}.brand-manifesto .quote-inner{grid-template-columns:1fr auto;gap:18px 24px;min-height:170px}.manifesto-kicker{grid-column:1/-1}.brand-manifesto .quote-inner p{font-size:clamp(36px,7vw,54px)}.manifesto-signature{min-width:120px;padding-left:17px}}
+@media(max-width:560px){.brand-manifesto{padding:30px 0}.brand-manifesto .quote-inner{grid-template-columns:1fr;gap:20px;min-height:0}.manifesto-kicker{gap:10px}.manifesto-kicker>span{font-size:27px}.brand-manifesto .quote-inner p{font-size:clamp(36px,10vw,48px);white-space:normal;line-height:1.02}.manifesto-signature{border-left:0;border-top:1px solid rgba(0,191,255,.25);padding:14px 0 0;min-width:0;display:grid;grid-template-columns:auto auto;align-items:center;gap:6px 12px}.signature-line{grid-row:1/3;width:24px;margin:0}.manifesto-signature b{font-size:10px}.manifesto-signature small{font-size:8px}}
