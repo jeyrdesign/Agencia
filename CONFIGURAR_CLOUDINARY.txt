@@ -5,7 +5,7 @@ CONFIGURACIÓN DE CLOUDINARY PARA JEYR DESIGN (GRATUITO)
 3. Abre Settings (engranaje) > Upload > Upload presets > Add upload preset.
 4. Pon un nombre fácil de reconocer: jeyr_unsigned.
 5. En Signing Mode selecciona Unsigned.
-6. En Allowed formats coloca: jpg,jpeg,png,webp,svg,mp4,webm.
+6. En Allowed formats coloca: jpg,jpeg,png,webp,svg.
 7. Guarda el preset.
 8. En tu web abre https://www.jeyrdesign.com/admin/ e inicia sesión.
 9. En el menú del panel entra en Configuración.
@@ -23,6 +23,15 @@ IMPORTANTE
 ACTUALIZACIÓN DE PORTAFOLIO
 - Cada proyecto ahora funciona como un evento con portada y galería.
 - En Administración > Portafolio crea o edita un evento, selecciona portada y varias fotografías de galería.
-- En la web, cada tarjeta abre galeria.html en una pestaña nueva.
-- Los logotipos se muestran sobre fondo oscuro/transparente; se recomienda subir PNG con transparencia cuando el archivo original lo permita.
+- En la web, cada tarjeta abre galeria.html en la misma pestaña.
+- Los videos se registran en Administración > Videos de YouTube pegando su enlace; no se suben a Cloudinary. Los logotipos se muestran sobre fondo oscuro/transparente; se recomienda subir PNG con transparencia cuando el archivo original lo permita.
 - Cloudinary usa el Cloud name bktloafr y el preset unsigned jeyr_unsigned. No introduzcas API Secret.
+
+
+VIDEOS DE YOUTUBE
+- En Administración > Videos de YouTube selecciona Agregar video.
+- Completa título, categoría, enlace de YouTube y descripción.
+- El administrador acepta enlaces de youtube.com/watch, youtu.be, Shorts y enlaces embed/live.
+- Los videos públicos y no listados pueden mostrarse en el sitio; los privados no se reproducen para visitantes.
+- El portafolio completo muestra miniatura y botón de reproducción. Al abrir el video, se reproduce mediante el reproductor privacy-enhanced de YouTube (youtube-nocookie.com).
+- Los videos se guardan como metadatos en la colección Firestore `videos`; el archivo audiovisual permanece alojado en YouTube.
