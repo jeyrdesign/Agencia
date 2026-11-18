@@ -11,6 +11,23 @@
     items.forEach(el=>observer.observe(el));
   };
   reveal(document);
+  // Parallax muy ligero del holograma en escritorio; no se ejecuta en táctil ni con movimiento reducido.
+  const heroArt=document.querySelector('.hero-art');
+  if(heroArt&&!reduce&&window.matchMedia('(hover: hover) and (pointer: fine)').matches){
+    let frame=0;
+    heroArt.addEventListener('pointermove',event=>{
+      if(frame)return;
+      frame=requestAnimationFrame(()=>{
+        const rect=heroArt.getBoundingClientRect();
+        const x=(event.clientX-rect.left)/rect.width-.5;
+        const y=(event.clientY-rect.top)/rect.height-.5;
+        heroArt.style.setProperty('--hero-x',`${x*9}px`);
+        heroArt.style.setProperty('--hero-y',`${y*9}px`);
+        frame=0;
+      });
+    },{passive:true});
+    heroArt.addEventListener('pointerleave',()=>{heroArt.style.setProperty('--hero-x','0px');heroArt.style.setProperty('--hero-y','0px')},{passive:true});
+  }
   document.addEventListener('jeyr:content-updated',()=>reveal(document));
   // Navegación por secciones: resalta el enlace correspondiente mientras se desplaza.
   const navLinks=[...document.querySelectorAll('#main-nav a[href*="#"]')];

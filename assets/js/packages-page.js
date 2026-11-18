@@ -1,9 +1,9 @@
 import { db } from "../../admin/js/firebase.js";
-import { collection, getDocs, query, where, getDoc, doc } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+import { collection, getDocs, query, where, getDoc, doc, addDoc, serverTimestamp, limit } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 
 const $ = (selector) => document.querySelector(selector);
 const esc = (value = "") => String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const normalize = value => String(value || "").toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+const normalize = value => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("es").replace(/[^a-z0-9]+/g," ").trim().replace(/\s+/g," ");
 const config = {
   diseno: {title:"Diseño gráfico & branding", eyebrow:"01 / IDENTIDAD VISUAL", intro:"Ideas, conceptos y sistemas gráficos que construyen marcas reconocibles.", terms:["diseno","diseño","branding","marca","identidad","grafico","gráfico","publicidad","logo","logotipo"], fallback:[]},
   fotografia: {title:"Fotografía profesional", eyebrow:"02 / IMAGEN Y RETRATO", intro:"Creamos imágenes que cuentan historias. Encuentra la sesión o cobertura adecuada para tu proyecto.", terms:["foto","fotografia","fotografía","sesion","sesión","retrato","cobertura","evento","producto","estudio","exterior"], fallback:[
@@ -17,6 +17,7 @@ const config = {
 const category = document.body.dataset.category;
 const current = config[category] || config.fotografia;
 const whatsapp = "593980478748";
+async function trackPage(){try{await addDoc(collection(db,"analyticsEvents"),{type:"page_view",page:location.pathname,createdAt:serverTimestamp()});}catch(e){console.warn("No se pudo registrar la visita",e);}}
 
 function whatsappLink(name) {
   const message = `Hola JEYR DESIGN, deseo información sobre el paquete ${name}.`;
@@ -47,8 +48,10 @@ async function init() {
   $("#category-intro").textContent = current.intro;
   document.title = `${current.title} | JEYR DESIGN`;
   try {
-    const snapshot = await getDocs(query(collection(db, "packages"), where("published", "==", true)));
-    const all = snapshot.docs.map(document => ({ id: document.id, ...document.data() }));
+    const snapshot = await getDocs(query(collection(db, "packages"), where("published", "==", true), limit(100)));
+    const raw = snapshot.docs.map(document => ({ id: document.id, ...document.data() }));
+    const seen = new Set();
+    const all = raw.filter(item => {const key=`${normalize(item.name)}|${normalize(item.category)}`;if(seen.has(key))return false;seen.add(key);return true;});
     const filtered = all.filter(item => {
       const searchable = normalize([item.category, item.name, item.description, ...(item.features || [])].join(" "));
       return current.terms.some(term => searchable.includes(normalize(term)));
@@ -67,5 +70,6 @@ async function init() {
       document.querySelectorAll("[data-whatsapp]").forEach(link => link.href = `https://wa.me/${phone}`);
     }
   } catch (error) { console.warn("No se pudo leer la configuración pública", error); }
+  trackPage();
 }
 init();

@@ -190,19 +190,87 @@ html{scroll-behavior:smooth;scroll-padding-top:100px}
 }
 
 
-/* Manifiesto de marca: firma JEYR reubicada junto a la presentación institucional */
-.brand-manifesto{margin:0;padding:42px 0;background:linear-gradient(105deg,rgba(8,35,52,.96),rgba(6,19,30,.98) 58%,rgba(5,13,22,.98));border-block:1px solid rgba(0,191,255,.22);position:relative;overflow:hidden}
-.brand-manifesto:before{content:"";position:absolute;width:420px;height:420px;right:8%;top:50%;transform:translateY(-50%);border:1px solid rgba(0,191,255,.10);border-radius:50%;box-shadow:0 0 0 34px rgba(0,191,255,.018),0 0 0 82px rgba(0,191,255,.014);pointer-events:none}
-.brand-manifesto .quote-inner{min-height:190px;display:grid;grid-template-columns:1fr 2.2fr auto;align-items:center;gap:34px;position:relative;z-index:1}
-.manifesto-kicker{display:flex;align-items:center;gap:13px;color:#8ca9b8}
-.manifesto-kicker>span{font-size:32px;line-height:1;color:var(--cyan);text-shadow:0 0 22px rgba(0,191,255,.5)}
-.manifesto-kicker small,.manifesto-signature small{font-size:9px;letter-spacing:.18em;line-height:1.6}
-.brand-manifesto .quote-inner p{font:800 clamp(38px,5.1vw,66px)/.98 var(--display);letter-spacing:-.065em;margin:0;white-space:nowrap}
-.brand-manifesto .quote-inner p>span{color:#f2fbff}
-.brand-manifesto .quote-inner em{color:var(--cyan)}
-.manifesto-signature{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:145px;padding-left:24px;border-left:1px solid rgba(0,191,255,.3)}
-.manifesto-signature b{font:800 11px var(--display);letter-spacing:.16em;color:#e9f8fc}
-.manifesto-signature small{color:#7f9ba9}
-.signature-line{display:block;width:32px;height:2px;background:linear-gradient(90deg,var(--cyan),transparent);margin-bottom:5px}
-@media(max-width:850px){.brand-manifesto{padding:34px 0}.brand-manifesto .quote-inner{grid-template-columns:1fr auto;gap:18px 24px;min-height:170px}.manifesto-kicker{grid-column:1/-1}.brand-manifesto .quote-inner p{font-size:clamp(36px,7vw,54px)}.manifesto-signature{min-width:120px;padding-left:17px}}
-@media(max-width:560px){.brand-manifesto{padding:30px 0}.brand-manifesto .quote-inner{grid-template-columns:1fr;gap:20px;min-height:0}.manifesto-kicker{gap:10px}.manifesto-kicker>span{font-size:27px}.brand-manifesto .quote-inner p{font-size:clamp(36px,10vw,48px);white-space:normal;line-height:1.02}.manifesto-signature{border-left:0;border-top:1px solid rgba(0,191,255,.25);padding:14px 0 0;min-width:0;display:grid;grid-template-columns:auto auto;align-items:center;gap:6px 12px}.signature-line{grid-row:1/3;width:24px;margin:0}.manifesto-signature b{font-size:10px}.manifesto-signature small{font-size:8px}}
+/* JEYR DESIGN / contraste y jerarquía visual */
+:root{--bg:#080d16;--surface-1:#101a29;--surface-2:#0c1725;--surface-card:#142536}
+body{background:#080d16}
+.intro,.portfolio,.brands-section{position:relative;background:#101a29;box-shadow:0 0 0 100vmax #101a29;clip-path:inset(0 -100vmax)}
+.services,.packages,.contact{position:relative;background:#0b1421;box-shadow:0 0 0 100vmax #0b1421;clip-path:inset(0 -100vmax)}
+.intro{border-top:1px solid rgba(94,174,205,.14);border-bottom:1px solid rgba(94,174,205,.10)}
+.services{border-bottom:1px solid rgba(94,174,205,.10)}
+.portfolio{border-block:1px solid rgba(94,174,205,.12)}
+.packages{border-bottom:1px solid rgba(94,174,205,.10)}
+.brands-section{border-top:1px solid rgba(94,174,205,.12)}
+.contact{border-top:1px solid rgba(94,174,205,.12)}
+.service-card,.package-card{background:linear-gradient(150deg,rgba(20,37,54,.92),rgba(10,23,36,.96));border-color:rgba(104,161,190,.18);border-radius:13px}
+.service-feature,.package-card.featured{background:linear-gradient(145deg,#123b50,#102235);border-color:rgba(0,191,255,.4)}
+.service-card:hover,.package-card:hover{border-color:rgba(0,191,255,.58);box-shadow:0 18px 44px rgba(0,0,0,.24)}
+.portfolio-item,.portfolio-placeholder{border-radius:13px;overflow:hidden}
+.brands-row{border-color:rgba(104,161,190,.2)}
+.brand-tile{background:rgba(7,19,31,.52);border-color:rgba(104,161,190,.18)}
+.contact-form{background:linear-gradient(145deg,#142536,#0d1a29);border-color:rgba(0,191,255,.2);border-radius:14px}
+.site-footer{position:relative;z-index:1;padding:32px max(32px,calc((100vw - 1180px)/2));background:#070c14;border-top:1px solid rgba(104,161,190,.18);display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px 30px}
+.site-footer .footer-slogan{margin:0;color:#eaf7fb;font:750 clamp(17px,2vw,22px)/1.2 var(--display);letter-spacing:-.035em}
+.site-footer .footer-slogan em{font-style:normal;color:var(--cyan)}
+.site-footer>div{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:18px;font-size:10px;color:#a9bfcc}
+.site-footer>div a:hover{color:var(--cyan)}
+.site-footer>small{grid-column:1/-1;padding-top:12px;border-top:1px solid rgba(104,161,190,.12);color:#6f8796;font-size:9px}
+.site-footer .brand-logo-mark{display:none!important}
+.chart-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;color:#eaf4ff}
+.chart-heading span{font-size:11px;color:#9bb0c4}
+.barrow{display:flex;align-items:stretch;gap:5px;height:190px;padding:8px 0 0;border-bottom:1px solid #31516a}
+.bar-wrap{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:7px}
+.bar-wrap .bar{width:min(100%,24px);min-height:3px;flex:0 0 auto;background:linear-gradient(180deg,#4bd5e7,#087cae);border-radius:5px 5px 0 0}
+.bar-wrap small{font-size:9px;color:#91aabd;white-space:nowrap;transform:rotate(-35deg);transform-origin:top center}
+@media(max-width:650px){.site-footer{grid-template-columns:1fr;padding:28px 19px}.site-footer>div{justify-content:flex-start;gap:14px}.site-footer>small{grid-column:1}.barrow{gap:2px;height:150px}.bar-wrap small{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.service-card,.package-card,.portfolio-item img{transition:none!important}}
+/* Secciones con ritmos de contraste independientes */
+.services{background:#080d16;box-shadow:0 0 0 100vmax #080d16}
+.portfolio{background:#0d1725;box-shadow:0 0 0 100vmax #0d1725}
+.brands-section{background:#132435;box-shadow:0 0 0 100vmax #132435}
+.contact{background:#0b1421;box-shadow:0 0 0 100vmax #0b1421}
+
+
+/* JEYR HERO 2.0 — holograma vivo, profundidad y respuesta al cursor.
+   El encabezado conserva exactamente su estructura y proporciones anteriores. */
+.hero-art{--hero-x:0px;--hero-y:0px;isolation:isolate;perspective:1100px}
+.hero-art::before{content:"";position:absolute;inset:7% 4%;z-index:0;pointer-events:none;border-radius:50%;background:radial-gradient(ellipse at 50% 48%,rgba(0,191,255,.17),rgba(16,91,150,.08) 35%,transparent 69%);filter:blur(18px);animation:hero-aura 7s ease-in-out infinite}
+.hero-art::after{content:"";position:absolute;z-index:0;inset:12% 8%;pointer-events:none;border:1px solid rgba(40,203,255,.12);border-radius:50%;transform:rotate(-22deg) scaleX(.78);box-shadow:0 0 45px rgba(0,191,255,.07),inset 0 0 35px rgba(0,191,255,.035);animation:hero-ring 18s linear infinite}
+.hero-image{z-index:1;transform:translate3d(var(--hero-x),var(--hero-y),0);transition:transform .22s ease-out,box-shadow .4s ease;animation:hero-float 7s ease-in-out infinite;box-shadow:0 35px 90px #0008,0 0 35px rgba(0,191,255,.08)}
+.hero-image:hover{box-shadow:0 42px 100px #0009,0 0 48px rgba(0,191,255,.2)}
+.hero-hologram{transform-origin:50% 55%;animation:holo-breathe 5.5s ease-in-out infinite,holo-drift 11s ease-in-out infinite}
+.hero-image-shade{overflow:hidden}
+.hero-image-shade::before{content:"";position:absolute;z-index:1;left:-25%;right:-25%;top:-25%;height:24%;background:linear-gradient(180deg,transparent,rgba(64,230,255,.12),rgba(64,230,255,.34),transparent);filter:blur(5px);transform:rotate(-12deg);animation:holo-scan 6.5s ease-in-out infinite;pointer-events:none}
+.orbit{z-index:0;will-change:transform;filter:drop-shadow(0 0 8px rgba(0,191,255,.12))}
+.orbit-one{animation:orbit-spin 24s linear infinite}
+.orbit-two{animation:orbit-spin-reverse 31s linear infinite}
+.floating-card{transition:transform .35s ease,border-color .35s ease,box-shadow .35s ease;animation:float-card 6s ease-in-out infinite}
+.card-bottom{animation-delay:-2.8s}
+.hero-cross{animation:cross-glow 4s ease-in-out infinite;transform-origin:center}
+.hero-art:hover .card-top{transform:translate3d(-5px,-7px,0)}
+.hero-art:hover .card-bottom{transform:translate3d(5px,6px,0)}
+.hero-art:hover .hero-cross{transform:rotate(45deg) scale(1.12)}
+@keyframes hero-aura{0%,100%{opacity:.55;transform:scale(.92)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes hero-ring{0%{transform:rotate(-22deg) scaleX(.78)}50%{transform:rotate(158deg) scaleX(.86)}100%{transform:rotate(338deg) scaleX(.78)}}
+@keyframes hero-float{0%,100%{translate:0 0}50%{translate:0 -9px}}
+@keyframes holo-drift{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-5px,-8px,0) scale(1.025)}}
+@keyframes holo-scan{0%{top:-30%;opacity:0}12%{opacity:.8}58%{opacity:.5}85%,100%{top:115%;opacity:0}}
+@keyframes orbit-spin{from{rotate:0deg}to{rotate:360deg}}
+@keyframes orbit-spin-reverse{from{rotate:360deg}to{rotate:0deg}}
+@keyframes float-card{0%,100%{translate:0 0}50%{translate:0 -6px}}
+@keyframes cross-glow{0%,100%{opacity:.58;filter:drop-shadow(0 0 4px rgba(0,191,255,.25))}50%{opacity:1;filter:drop-shadow(0 0 15px rgba(0,191,255,.8))}}
+
+/* Firma institucional: se mantiene abajo, sin repetir el isotipo del encabezado. */
+.site-footer{position:relative;overflow:hidden;padding:48px max(32px,calc((100vw - 1180px)/2)) 24px;background:radial-gradient(ellipse at 12% 0%,rgba(0,150,205,.13),transparent 42%),#070c14;border-top:1px solid rgba(0,191,255,.2);display:grid;grid-template-columns:minmax(180px,.7fr) 1.3fr auto;align-items:center;gap:14px 34px}
+.site-footer::before{content:"";position:absolute;top:0;left:max(32px,calc((100vw - 1180px)/2));width:74px;height:1px;background:linear-gradient(90deg,#43eaff,transparent);box-shadow:0 0 18px #00bfff}
+.footer-signature{display:flex;align-items:center;gap:10px;color:#eafaff;font:800 10px var(--display);letter-spacing:.16em;white-space:nowrap}
+.footer-signature i{width:22px;height:1px;background:linear-gradient(90deg,#00d9ff,rgba(0,217,255,.12))}
+.footer-signature small{font:600 8px var(--font);letter-spacing:.17em;color:#718b9b}
+.site-footer .footer-slogan{margin:0;color:#f2fbff;font:800 clamp(23px,3vw,38px)/1.02 var(--display);letter-spacing:-.055em}
+.site-footer .footer-slogan em{font-style:normal;color:#22c8e8;text-shadow:0 0 24px rgba(0,191,255,.18)}
+.site-footer .footer-links{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:16px 20px;font-size:10px;color:#9eb4c1}
+.site-footer .footer-links a{transition:color .2s ease,transform .2s ease}
+.site-footer .footer-links a:hover{color:#4be4f6;transform:translateY(-2px)}
+.site-footer .footer-copy{grid-column:1/-1;padding-top:17px;border-top:1px solid rgba(104,161,190,.13);color:#718797;font-size:9px}
+@media(max-width:850px){.site-footer{grid-template-columns:1fr 1fr}.site-footer .footer-links{grid-column:1/-1;justify-content:flex-start}.site-footer .footer-slogan{justify-self:end;text-align:right}}
+@media(max-width:650px){.hero-art::before{inset:4% 0}.hero-art::after{inset:10% 3%}.hero-image{animation:hero-float 8s ease-in-out infinite}.hero-art:hover .card-top,.hero-art:hover .card-bottom{transform:none}.site-footer{grid-template-columns:1fr;padding:34px 19px 20px;gap:17px}.site-footer::before{left:19px}.site-footer .footer-slogan{justify-self:start;text-align:left;font-size:clamp(27px,8vw,36px)}.site-footer .footer-links{grid-column:1;justify-content:flex-start;gap:14px 18px}.site-footer .footer-copy{grid-column:1}}
+@media(prefers-reduced-motion:reduce){.hero-art::before,.hero-art::after,.hero-image,.hero-hologram,.hero-image-shade::before,.orbit-one,.orbit-two,.floating-card,.hero-cross{animation:none!important;transition:none!important}.hero-image{transform:none!important}}
