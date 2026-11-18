@@ -414,3 +414,9 @@ a[role="link"]:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
 @media(max-width:800px){.portfolio-masonry{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:10px;gap:11px}.portfolio-project-card{grid-row:span 25!important}.portfolio-project-card:nth-child(3n+1){grid-row:span 29!important}}
 @media(max-width:520px){.portfolio-filters{gap:7px;margin-bottom:20px}.portfolio-filter{padding:9px 11px;font-size:9px}.portfolio-masonry{grid-template-columns:1fr;grid-auto-rows:10px;gap:10px}.portfolio-project-card{grid-row:span 27!important}.portfolio-project-card:nth-child(odd){grid-row:span 29!important}.portfolio-project-card .portfolio-caption{padding:50px 16px 16px}}
 @media(prefers-reduced-motion:reduce){.portfolio-filter{transition:none}}
+
+/* Navegación independiente en tarjetas de servicios */
+.service-card{cursor:pointer}
+.service-card-portfolio{position:absolute;inset:0;z-index:1;border-radius:inherit}
+.service-card .service-action{position:relative;z-index:2;display:inline-flex;align-items:center;gap:10px;cursor:pointer}
+.service-card-portfolio:focus-visible,.service-card .service-action:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
