@@ -67,7 +67,7 @@ async function init() {
     const settings = await getDoc(doc(db, "siteSettings", "public"));
     if (settings.exists()) {
       const phone = String(settings.data().whatsapp || whatsapp).replace(/\D/g, "");
-      document.querySelectorAll("[data-whatsapp]").forEach(link => link.href = `https://wa.me/${phone}`);
+      document.querySelectorAll("[data-whatsapp]").forEach(link => link.setAttribute("data-jeyr-destination", `https://wa.me/${phone}`));
     }
   } catch (error) { console.warn("No se pudo leer la configuración pública", error); }
   trackPage();

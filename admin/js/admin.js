@@ -131,7 +131,9 @@ function editor(kind,item=null) {
   let html="";
   if(kind==="portfolio") html=`
     <label>Título del evento/proyecto<input name="title" required maxlength="100" value="${esc(item?.title)}"></label>
-    <label>Categoría<input name="category" maxlength="60" value="${esc(item?.category||"Fotografía")}"></label>
+    <label>Categoría<select name="category" required>
+      ${["Fotografía","Eventos","Deportes","XV años","Diseño gráfico","Branding","Producción audiovisual",...(item?.category&&!['Fotografía','Eventos','Deportes','XV años','Diseño gráfico','Branding','Producción audiovisual'].includes(item.category)?[item.category]:[])].map(v=>`<option value="${esc(v)}" ${item?.category===v?"selected":(!item&&v==="Fotografía"?"selected":"")}>${esc(v)}</option>`).join("")}
+    </select></label>
     <label class="wide">Descripción<textarea name="description" maxlength="1200">${esc(item?.description)}</textarea></label>
     <label>Portada del evento<input name="cover" type="file" accept="image/png,image/jpeg,image/webp"></label>
     <label>Fotografías de la galería<input name="gallery" type="file" accept="image/png,image/jpeg,image/webp" multiple></label>

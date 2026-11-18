@@ -274,3 +274,143 @@ body{background:#080d16}
 @media(max-width:850px){.site-footer{grid-template-columns:1fr 1fr}.site-footer .footer-links{grid-column:1/-1;justify-content:flex-start}.site-footer .footer-slogan{justify-self:end;text-align:right}}
 @media(max-width:650px){.hero-art::before{inset:4% 0}.hero-art::after{inset:10% 3%}.hero-image{animation:hero-float 8s ease-in-out infinite}.hero-art:hover .card-top,.hero-art:hover .card-bottom{transform:none}.site-footer{grid-template-columns:1fr;padding:34px 19px 20px;gap:17px}.site-footer::before{left:19px}.site-footer .footer-slogan{justify-self:start;text-align:left;font-size:clamp(27px,8vw,36px)}.site-footer .footer-links{grid-column:1;justify-content:flex-start;gap:14px 18px}.site-footer .footer-copy{grid-column:1}}
 @media(prefers-reduced-motion:reduce){.hero-art::before,.hero-art::after,.hero-image,.hero-hologram,.hero-image-shade::before,.orbit-one,.orbit-two,.floating-card,.hero-cross{animation:none!important;transition:none!important}.hero-image{transform:none!important}}
+
+
+/* JEYR DESIGN — jerarquía cromática refinada */
+:root{--bg:#080D16;--bg2:#101A29;--panel:#142536;--surface-1:#101A29;--surface-2:#080D16;--surface-card:#142536}
+body{background:#080D16}
+.intro{background:#101A29;box-shadow:0 0 0 100vmax #101A29}
+.services{background:#080D16;box-shadow:0 0 0 100vmax #080D16}
+.portfolio{background:#101A29;box-shadow:0 0 0 100vmax #101A29}
+.brands-section{background:#142536;box-shadow:0 0 0 100vmax #142536}
+.contact{background:#101A29;box-shadow:0 0 0 100vmax #101A29}
+.packages-hub,.category-page{position:relative;background:#101A29;box-shadow:0 0 0 100vmax #101A29;clip-path:inset(0 -100vmax)}
+.quote-band{background:linear-gradient(110deg,#142536,#101A29);border-color:rgba(0,191,255,.2)}
+.service-card,.package-card,.category-panel{background:linear-gradient(150deg,#142536 0%,#101A29 100%);border-color:rgba(132,177,201,.2)}
+.service-feature,.package-card.featured{background:linear-gradient(145deg,#17384B,#142536);border-color:rgba(0,191,255,.42)}
+.portfolio-item,.portfolio-placeholder{border-color:rgba(132,177,201,.22)}
+.brand-tile{background:rgba(8,13,22,.42);border-color:rgba(151,194,214,.2)}
+.contact-form{background:linear-gradient(145deg,#142536,#101A29);border-color:rgba(0,191,255,.22)}
+.category-panel:hover,.service-card:hover,.package-card:hover{border-color:rgba(0,191,255,.62);box-shadow:0 22px 52px rgba(0,0,0,.3),0 0 28px rgba(0,191,255,.1)}
+a[role="link"]{cursor:pointer;touch-action:manipulation}
+a[role="link"]:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+
+
+/* Pie de página: composición horizontal con aire moderado y copyright abajo a la izquierda. */
+.site-footer{
+  position:relative;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-start;
+  gap:18px clamp(24px,3vw,42px);
+  padding:30px max(32px,calc((100vw - 1180px)/2)) 18px;
+  background:radial-gradient(ellipse at 12% 0%,rgba(0,150,205,.13),transparent 42%),#070c14;
+  border-top:1px solid rgba(0,191,255,.2);
+}
+.site-footer::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:max(32px,calc((100vw - 1180px)/2));
+  width:74px;
+  height:1px;
+  background:linear-gradient(90deg,#43eaff,transparent);
+  box-shadow:0 0 18px #00bfff;
+}
+.site-footer .footer-slogan{
+  margin:0;
+  color:#f2fbff;
+  font:800 clamp(23px,3vw,38px)/1.02 var(--display);
+  letter-spacing:-.055em;
+  white-space:nowrap;
+}
+.site-footer .footer-slogan em{
+  font-style:normal;
+  color:#22c8e8;
+  text-shadow:0 0 24px rgba(0,191,255,.18);
+}
+.site-footer .footer-signature{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:#eafaff;
+  font:800 10px var(--display);
+  letter-spacing:.16em;
+  white-space:nowrap;
+}
+.site-footer .footer-signature i{
+  width:22px;
+  height:1px;
+  background:linear-gradient(90deg,#00d9ff,rgba(0,217,255,.12));
+}
+.site-footer .footer-signature small{
+  color:#718b9b;
+  font:600 8px var(--font);
+  letter-spacing:.17em;
+}
+.site-footer .footer-links{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  gap:12px 20px;
+  margin-left:auto;
+  color:#9eb4c1;
+  font-size:10px;
+}
+.site-footer .footer-links a{transition:color .2s ease,transform .2s ease}
+.site-footer .footer-links a:hover{color:#4be4f6;transform:translateY(-2px)}
+.site-footer .footer-copy{
+  flex:0 0 100%;
+  margin:0;
+  padding-top:13px;
+  border-top:1px solid rgba(104,161,190,.13);
+  color:#718797;
+  font-size:9px;
+  text-align:left;
+}
+@media(max-width:900px){
+  .site-footer{gap:16px 26px}
+  .site-footer .footer-links{width:100%;margin-left:0;justify-content:flex-start}
+}
+@media(max-width:650px){
+  .site-footer{padding:27px 19px 17px;gap:15px 22px}
+  .site-footer::before{left:19px}
+  .site-footer .footer-slogan{font-size:clamp(18px,5vw,21px);white-space:normal}
+  .site-footer .footer-signature{gap:7px;font-size:9px}
+  .site-footer .footer-signature i{width:15px}
+  .site-footer .footer-signature small{font-size:7px}
+  .site-footer .footer-links{gap:12px 17px}
+  .site-footer .footer-copy{padding-top:11px;line-height:1.6}
+}
+@media(max-width:390px){
+  .site-footer{gap:13px 18px}
+  .site-footer .footer-slogan{width:100%}
+  .site-footer .footer-signature{width:100%}
+}
+
+/* Portafolio profesional: filtros y composición tipo masonry */
+.portfolio-filters{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:-12px 0 28px}
+.portfolio-filter{appearance:none;border:1px solid rgba(132,177,201,.2);background:rgba(13,34,49,.72);color:#a9bfca;padding:10px 15px;font-size:10px;letter-spacing:.025em;cursor:pointer;transition:background .22s,border-color .22s,color .22s,transform .22s}
+.portfolio-filter:hover{border-color:rgba(0,191,255,.55);color:#eafaff;transform:translateY(-2px)}
+.portfolio-filter.is-active{background:linear-gradient(110deg,rgba(0,191,255,.18),rgba(8,124,255,.12));border-color:rgba(0,191,255,.68);color:#70dcff;box-shadow:0 5px 22px rgba(0,191,255,.08)}
+.portfolio-masonry{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:12px;gap:14px;min-height:180px}
+.portfolio-project-card{display:block;min-height:0;grid-row:span 25;isolation:isolate}
+.portfolio-project-card:nth-child(5n+1){grid-row:span 30}
+.portfolio-project-card:nth-child(5n+2){grid-row:span 25}
+.portfolio-project-card:nth-child(5n+3){grid-row:span 28}
+.portfolio-project-card:nth-child(5n+4){grid-row:span 23}
+.portfolio-project-card:nth-child(5n){grid-row:span 27}
+.portfolio-project-card img{position:absolute;inset:0;width:100%;height:100%;min-height:0;object-fit:cover}
+.portfolio-project-card .portfolio-caption{padding:55px 20px 19px}
+.portfolio-card-description{display:block;color:#c2d3dc;font-size:10px;line-height:1.55;margin-top:7px;max-width:95%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.portfolio-open{display:inline-block;color:var(--cyan);font-size:10px;margin-top:10px}
+.portfolio-loading{grid-column:1/-1;padding:55px 0;color:var(--muted);font-size:12px}
+.portfolio-empty{grid-column:1/-1}
+.portfolio-reset{margin-top:10px;padding:10px 14px;background:transparent;border:1px solid rgba(0,191,255,.45);color:var(--cyan);cursor:pointer;font-size:11px}
+.gallery-project-meta{display:flex;align-items:center;gap:12px;margin-top:20px;color:var(--cyan);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.gallery-project-meta i{width:4px;height:4px;border-radius:50%;background:#6e8795}
+@media(max-width:800px){.portfolio-masonry{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:10px;gap:11px}.portfolio-project-card{grid-row:span 25!important}.portfolio-project-card:nth-child(3n+1){grid-row:span 29!important}}
+@media(max-width:520px){.portfolio-filters{gap:7px;margin-bottom:20px}.portfolio-filter{padding:9px 11px;font-size:9px}.portfolio-masonry{grid-template-columns:1fr;grid-auto-rows:10px;gap:10px}.portfolio-project-card{grid-row:span 27!important}.portfolio-project-card:nth-child(odd){grid-row:span 29!important}.portfolio-project-card .portfolio-caption{padding:50px 16px 16px}}
+@media(prefers-reduced-motion:reduce){.portfolio-filter{transition:none}}

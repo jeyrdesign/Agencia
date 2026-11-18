@@ -6,7 +6,21 @@ const esc = (v="") => String(v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;
 const whatsappDefault = "593980478748";
 const normalize = value => String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("es").replace(/[^a-z0-9]+/g," ").trim();
 function uniqueBy(items,keyFn){const seen=new Set();return items.filter(item=>{const key=keyFn(item);if(!key||seen.has(key))return false;seen.add(key);return true;});}
-function optimizedImage(url,width=1000){const value=String(url||"");if(!value.includes("res.cloudinary.com")||!value.includes("/image/upload/")||value.includes("f_auto"))return value;return value.replace("/image/upload/",`/image/upload/f_auto,q_auto,w_${width},c_limit/`);}
+function optimizedImage(url,width=1000,quality="auto:good"){
+  const value=String(url||"");
+  const marker="/image/upload/";
+  if(!value.includes("res.cloudinary.com")||!value.includes(marker))return value;
+  const start=value.indexOf(marker)+marker.length;
+  const rest=value.slice(start);
+  const first=rest.split("/")[0];
+  const isVersion=/^v\d+$/.test(first);
+  const isTransform=!isVersion&&(first.includes(",")||/^(?:f_|q_|w_|h_|c_|dpr_|e_|g_|ar_|r_|bo_|b_|t_)/.test(first));
+  const existing=isTransform?first.split(","):[];
+  const preserved=existing.filter(token=>!/^f_/.test(token)&&!/^q_/.test(token)&&!/^w_/.test(token)&&!/^c_limit$/.test(token));
+  const transform=["f_auto",`q_${quality}`,`w_${Math.max(80,Math.round(width))}`,"c_limit",...preserved].join(",");
+  const remainder=isTransform?rest.slice(first.length+1):rest;
+  return value.slice(0,start)+transform+"/"+remainder;
+}
 
 $("#year").textContent = new Date().getFullYear();
 $("#menu-toggle").addEventListener("click", () => $("#main-nav").classList.toggle("open"));
@@ -31,10 +45,10 @@ async function loadSettings() {
     if (!snap.exists()) return;
     const s = snap.data();
     const phone = String(s.whatsapp || whatsappDefault).replace(/\D/g, "");
-    $("#whatsapp-float").href = `https://wa.me/${phone}`;
+    $("#whatsapp-float").setAttribute("data-jeyr-destination", `https://wa.me/${phone}`);
     const detail = document.querySelector(".contact-detail b");
     if (detail) detail.textContent = `+${phone}`;
-    if (s.instagram) document.querySelector('a[href*="instagram.com"]')?.setAttribute("href", s.instagram);
+    if (s.instagram) document.querySelector('a[data-jeyr-destination*="instagram.com"]')?.setAttribute("data-jeyr-destination", s.instagram);
     if (s.welcomeMessage) document.querySelector(".contact-left>p").textContent = s.welcomeMessage;
   } catch(e) { console.warn("Configuración pública no disponible", e); }
 }
@@ -63,10 +77,10 @@ function renderBrands(items) {
     row.innerHTML = `<div class="brand-tile brand-placeholder">Tu marca podría estar aquí</div><div class="brand-tile brand-placeholder">Creamos juntos</div><div class="brand-tile brand-placeholder">JEYR DESIGN</div>`;
     return;
   }
-  row.innerHTML = items.slice(0,12).map(x => `
+  row.innerHTML = items.slice(0,12).map((x,i) => `
     <div class="brand-tile" title="${esc(x.name || 'Marca colaboradora')}">
       ${x.logoUrl
-        ? `<img class="brand-logo" src="${esc(optimizedImage(x.logoUrl,420))}" alt="${esc(x.name || 'Logotipo de marca')}" loading="lazy" decoding="async">`
+        ? `<img class="brand-logo" src="${esc(optimizedImage(x.logoUrl,320,"auto:eco"))}" alt="${esc(x.name || 'Logotipo de marca')}" width="150" height="72" loading="lazy" decoding="async"${i<3?' fetchpriority="high"':''} sizes="(max-width: 650px) 42vw, 150px">`
         : `<span class="brand-name-fallback">${esc(x.name || 'Marca colaboradora')}</span>`}
     </div>`).join("");
   row.querySelectorAll(".brand-logo").forEach(img => img.addEventListener("error", () => {
