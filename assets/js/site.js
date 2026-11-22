@@ -72,13 +72,13 @@ const portfolioPreviewCategories = [
   {key:"diseno-branding",label:"Diseño gráfico & branding",terms:["diseno","diseño","branding","marca","identidad","logotipo","logo","pieza grafica","publicidad"]},
   {key:"fotografia-profesional",label:"Fotografía profesional",terms:["fotografia","fotografía","foto","sesion","sesión","retrato","producto","evento","cobertura","deporte","deportiva","xv","quince"]},
   {key:"audiovisual",label:"Producción audiovisual",terms:["audiovisual","video","vídeo","reel","produccion","producción","contenido audiovisual"]},
-  {key:"digitales",label:"Comunicación digital",terms:["digital","redes","social","community","campana","campaña","marketing","publicaciones","contenido"]}
+  {key:"digitales",label:"Gestión de redes & creación de contenidos",terms:["gestion de redes","gestion redes","manejo de redes","administracion de redes","redes sociales","social media","community manager","community management","creacion de contenidos","contenido para redes","contenido digital","gestion digital","marketing digital","campana digital","publicaciones","comunicacion digital"]}
 ];
 function projectMatchesPreviewCategory(item, category) {
   const text = normalize(`${item.category||""} ${item.title||""} ${item.description||""}`);
   return category.terms.some(term => text.includes(normalize(term)));
 }
-function renderPortfolio(items, packageItems=[]) {
+function renderPortfolio(items) {
   const grid = $("#portfolio-grid");
   if (!grid) return;
   const uniqueItems = uniqueBy(items, x => `${normalize(x.title)}|${normalize(x.category)}`);
@@ -91,13 +91,12 @@ function renderPortfolio(items, packageItems=[]) {
     const project = matching.find(item => item.featured === true && (item.categoryCoverUrl || item.coverUrl || item.mediaUrl || item.imageUrl || item.youtubeId))
       || matching.find(item => item.coverUrl || item.mediaUrl || item.imageUrl || item.youtubeId);
     const latestFirst = (a,b) => ((b.updatedAt?.toMillis?.() || b.createdAt?.toMillis?.() || 0) - (a.updatedAt?.toMillis?.() || a.createdAt?.toMillis?.() || 0));
-    const digitalCover = category.key === "digitales"
-      ? packageItems.filter(item => item.categoryFeatured === true && normalize(item.category).includes("gestion de redes") && item.categoryCoverUrl).sort(latestFirst)[0]?.categoryCoverUrl
-      : "";
     const audiovisualCover = category.key === "audiovisual"
       ? items.filter(item => item.featured === true && normalize(item.category).includes("produccion audiovisual") && item.categoryCoverUrl).sort(latestFirst)[0]?.categoryCoverUrl
       : "";
-    const cover = digitalCover || audiovisualCover || project?.categoryCoverUrl || project?.coverUrl || project?.mediaUrl || project?.imageUrl || (project?.youtubeId ? `https://img.youtube.com/vi/${encodeURIComponent(project.youtubeId)}/hqdefault.jpg` : "");
+    // Todas las categorías, incluida Gestión de redes, usan la portada
+    // del proyecto/video destacado (o el más reciente si no hay destacado).
+    const cover = audiovisualCover || project?.categoryCoverUrl || project?.coverUrl || project?.mediaUrl || project?.imageUrl || (project?.youtubeId ? `https://img.youtube.com/vi/${encodeURIComponent(project.youtubeId)}/hqdefault.jpg` : "");
     const target = `galeria.html?categoria=${encodeURIComponent(category.key)}`;
     const image = cover
       ? `<img src="${esc(optimizedImage(cover,760))}" alt="Miniatura de ${esc(category.label)}" loading="lazy" decoding="async">`
@@ -153,6 +152,6 @@ $("#contact-form").addEventListener("submit", async (e) => {
 });
 (async function init(){
   track("page_view");
-  const [portfolioItems,videoItems,packageItems] = await Promise.all([getPublished("portfolio"),getPublished("videos"),getPublished("packages")]);
-  await Promise.all([loadSettings(), Promise.resolve(renderPortfolio([...portfolioItems,...videoItems],packageItems)), getPublished("brands").then(renderBrands)]);
+  const [portfolioItems,videoItems] = await Promise.all([getPublished("portfolio"),getPublished("videos")]);
+  await Promise.all([loadSettings(), Promise.resolve(renderPortfolio([...portfolioItems,...videoItems])), getPublished("brands").then(renderBrands)]);
 })();

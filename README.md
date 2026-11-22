@@ -23,7 +23,9 @@ Consulta `REVISION_TECNICA.md` para conocer las comprobaciones y sus límites.
 - El panel `Administración > Gestión digital` permite registrar estadísticas manuales, evolución mensual, enlaces a Reels/YouTube y fotos/diseños en Cloudinary.
 - Debe publicarse la regla `socialBrands` de `firebase/firestore.rules` en Firebase Console para permitir lectura pública de marcas publicadas y escritura exclusiva del administrador.
 - Los precios públicos se leen de la colección `packages`; administra nombre, categoría, precio y estado de publicación desde `Administración > Servicios y paquetes`.
-- Para mantener uniformes las tarjetas de categorías del inicio, puedes subir una miniatura personalizada desde la edición de un video de YouTube (Producción audiovisual) o desde un paquete de «Gestión de redes + creación de contenidos»; activa la casilla para usarla en la categoría inicial. Las imágenes se guardan en Cloudinary y no reemplazan ni modifican el contenido del portafolio.
+- Las cuatro tarjetas de «03 / TRABAJO SELECCIONADO» son categorías del portafolio: Diseño gráfico & branding, Fotografía profesional, Producción audiovisual y Gestión de redes & creación de contenidos. Cada una abre `galeria.html?categoria=...` y filtra los proyectos publicados de esa categoría.
+- Para la cuarta tarjeta, crea un proyecto en Administración > Portafolio con la categoría «Gestión de redes & creación de contenidos», agrega su portada y galería, y activa «Usar esta portada como miniatura destacada de su categoría». La portada destacada aparece en la tarjeta inicial; al abrirla se listan los proyectos de esa categoría y cada uno abre su galería individual.
+- Los videos de YouTube también pueden asignarse a «Gestión de redes & creación de contenidos». Su miniatura de categoría puede personalizarse desde el registro del video.
 
 
 ## Paso obligatorio de Firebase para Gestión digital
