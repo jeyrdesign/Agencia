@@ -27,7 +27,7 @@ No se ejecutó una sesión real en el dominio publicado ni se pudo confirmar el 
 
 ## Ajuste de navegación y miniaturas (18-11-2026)
 - Las tarjetas de servicios abren el portafolio de su categoría al pulsar fuera del enlace «Explorar paquetes»; el enlace de paquetes mantiene su destino independiente.
-- La portada muestra cuatro miniaturas de categorías (diseño/branding, fotografía, audiovisual y comunicación digital). Cada miniatura abre la categoría correspondiente.
+- La portada muestra cuatro miniaturas de categorías (diseño/branding, fotografía, audiovisual y Gestión de redes & creación de contenidos). Cada miniatura abre el filtro correspondiente del portafolio.
 - La presentación anterior de miniaturas por categoría fue sustituida en esta entrega por miniaturas con altura automática y proporción natural; no se fuerza una relación 4:5 ni se recorta la fotografía.
 - La página de portafolio completo conserva el filtro general y todas las categorías disponibles.
 
@@ -41,7 +41,8 @@ No se ejecutó una sesión real en el dominio publicado ni se pudo confirmar el 
 
 
 ## Gestión digital, paquetes y ajustes visuales (21-11-2026)
-- La cuarta tarjeta de servicios ahora representa **Gestión de redes + creación de contenidos**. Pulsar el cuerpo de la tarjeta abre el espacio de marcas; el enlace interior abre los paquetes y precios, manteniendo dos destinos separados.
+- La cuarta tarjeta de servicios representa **Gestión de redes + creación de contenidos**. Pulsar el cuerpo de la tarjeta abre el espacio de marcas; el enlace interior abre los paquetes y precios, manteniendo dos destinos separados.
+- La cuarta tarjeta de «03 / TRABAJO SELECCIONADO» es una categoría independiente del portafolio. Utiliza la portada de un proyecto/video destacado de Gestión de redes & creación de contenidos, abre el filtro `categoria=digitales` y conserva el recorrido a la galería individual de cada proyecto. Se mantiene compatibilidad con el alias antiguo «Comunicación digital».
 - Se añadió `gestion-digital.html`: lista las marcas publicadas y abre una ficha individual con seguidores, alcance, interacciones, reproducciones, periodo y fecha de actualización, evolución mensual y publicaciones.
 - Se añadió `Administración > Gestión digital`, con alta/edición/eliminación y publicación de marcas, estadísticas manuales, historial mensual, enlaces de Reels/YouTube con métricas individuales opcionales de alcance, reproducciones e interacciones, y carga de fotografías/diseños a Cloudinary. Los datos de estadísticas son manuales, no se consultan automáticamente desde Instagram.
 - La nueva colección Firestore es `socialBrands`. La regla incluida permite lectura pública solo a documentos publicados y escritura únicamente al administrador propietario. **Esta regla debe publicarse en Firebase Console > Firestore Database > Rules** antes de activar la sección.
@@ -61,7 +62,7 @@ No se ejecutó una sesión real en el dominio publicado ni se pudo confirmar el 
 - En «Quiénes somos» se reemplazó únicamente el texto de presentación por el texto cristocéntrico aprobado; se conservaron el encabezado, la estructura, el enlace y los estilos del bloque.
 - Se retiró el bloque de texto e iconos situado debajo de las acciones del hero, eliminando también su espacio.
 - La tarjeta 04 de la página principal ya no consulta ni muestra precios de paquetes. El enlace «Ver paquetes y precios» conserva su destino a la página de paquetes digitales.
-- En Administración > Portafolio se añadió la opción «Mostrar este proyecto en 03 / TRABAJO SELECCIONADO». La página principal muestra hasta cuatro proyectos seleccionados y enlaza cada miniatura a su galería individual. Si todavía no hay proyectos seleccionados, se conserva la vista previa de categorías como alternativa.
+- En Administración > Portafolio, cada proyecto puede asignarse a «Gestión de redes & creación de contenidos» y marcarse como destacado. Su portada representa la categoría en la tarjeta 4 de «03 / TRABAJO SELECCIONADO»; el enlace abre el filtro de esa categoría y cada proyecto listado abre su galería individual. Los videos de YouTube admiten la misma categoría y una miniatura personalizada.
 - Las miniaturas de «Trabajo seleccionado» y de la vista previa conservan la proporción original de las portadas: ancho adaptable, altura automática y sin recorte ni estiramiento.
 
 
@@ -84,4 +85,4 @@ No se ejecutó una sesión real en el dominio publicado ni se pudo confirmar el 
 - Se utilizó directamente la imagen original suministrada por el cliente (Mesa de trabajo 4.png).
 - Se conservó el degradado azul/cian original y el símbolo blanco; únicamente se aplicó redondeo de esquinas.
 - Se generaron SVG, PNG de 512/180/64/32 px y favicon.ico multirresolución.
-- Este paquete parte de JEYR_DESIGN_PORTAFOLIO_FILTER_CARDS.zip, que contiene las dos correcciones de navegación solicitadas.
+- Esta entrega parte de `JEYR_DESIGN_PAQUETES_ICONOS_INICIO.zip` y conserva el favicon con degradado y los iconos de las tarjetas de paquetes. Incluye la categoría 4 del portafolio con miniatura, filtros, proyectos y galerías integrados.
