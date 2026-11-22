@@ -71,3 +71,10 @@ No se ejecutó una sesión real en el dominio publicado ni se pudo confirmar el 
 - Fotografía y Producción audiovisual ahora usan SVG para igualar el tamaño óptico de los iconos de Diseño y Gestión de redes.
 - No se modificaron los textos, destinos ni comportamiento de las tarjetas.
 - Verificación realizada: sintaxis JS, estructura HTML, balance CSS e integridad del ZIP. No se realizó prueba visual en navegador ni prueba de producción.
+
+
+## Ajuste de tarjetas de portafolio y galerías
+- Se uniformó el marco de las tarjetas a 4:3 tanto en el portafolio completo como en las galerías de cada proyecto.
+- Las imágenes se presentan completas, centradas y sin recorte ni deformación mediante `object-fit: contain`.
+- Los textos de las tarjetas usan un espacio de altura uniforme para evitar variaciones en la cuadrícula.
+- Validación realizada: HTML parseable y sintaxis JavaScript sin cambios en los scripts. No se ejecutó prueba visual en navegador ni consulta real a Firebase/Cloudinary.

@@ -28,3 +28,8 @@ Consulta `REVISION_TECNICA.md` para conocer las comprobaciones y sus límites.
 
 ## Paso obligatorio de Firebase para Gestión digital
 Después de subir el código, abre Firebase Console → Firestore Database → Rules, incorpora la regla `match /socialBrands/{id}` que aparece en `firebase/firestore.rules` y pulsa **Publish**. No recrees el proyecto, no borres las colecciones actuales ni cambies el usuario administrador. Sin publicar esa regla, la nueva página de gestión digital no podrá leer las marcas y el administrador no podrá guardarlas.
+
+
+### Presentación uniforme del portafolio
+- Las tarjetas del portafolio y las galerías usan un marco de proporción fija 4:3 y mantienen dimensiones consistentes dentro de cada cuadrícula.
+- Las fotografías se muestran completas, centradas y con `object-fit: contain`: no se recortan ni se estiran. Las verticales y cuadradas quedan centradas; las horizontales conservan su proporción dentro del marco.
