@@ -81,32 +81,25 @@ function renderPortfolio(items) {
   const grid = $("#portfolio-grid");
   if (!grid) return;
   const uniqueItems = uniqueBy(items, x => `${normalize(x.title)}|${normalize(x.category)}`);
-  const selected = uniqueItems.filter(item => item.featured === true && (item.coverUrl || item.mediaUrl || item.imageUrl)).slice(0,4);
   grid.classList.add("portfolio-category-grid");
-  if (selected.length) {
-    grid.innerHTML = selected.map((project,index) => {
-      const cover = project.coverUrl || project.mediaUrl || project.imageUrl;
-      return `<a class="portfolio-item portfolio-category-card portfolio-selected-card" href="galeria.html?id=${encodeURIComponent(project.id)}" aria-label="Abrir proyecto ${esc(project.title||"JEYR DESIGN")}">
-        <img src="${esc(optimizedImage(cover,900))}" alt="${esc(project.title||"Proyecto JEYR DESIGN")}" loading="lazy" decoding="async">
-        <div class="portfolio-caption"><small>${esc(project.category||"PROYECTO")} · ${String(index+1).padStart(2,"0")}</small><b>${esc(project.title||"JEYR DESIGN")}</b><span class="portfolio-open">Ver proyecto ↗</span></div>
-      </a>`;
-    }).join("");
-    $("#portfolio-note").textContent = "Una selección de proyectos destacados. Explora cada trabajo o visita el portafolio completo.";
-  } else {
-    grid.innerHTML = portfolioPreviewCategories.map((category,index) => {
-      const project = uniqueItems.find(item => projectMatchesPreviewCategory(item,category));
-      const cover = project?.coverUrl || project?.mediaUrl || project?.imageUrl || "";
-      const target = `galeria.html?categoria=${encodeURIComponent(category.key)}`;
-      const image = cover
-        ? `<img src="${esc(optimizedImage(cover,760))}" alt="${esc(category.label)}" loading="lazy" decoding="async">`
-        : `<div class="portfolio-category-fallback"><span>${String(index+1).padStart(2,"0")}</span><b>${esc(category.label)}</b></div>`;
-      return `<a class="portfolio-item portfolio-category-card" href="${target}" aria-label="Ver todos los proyectos de ${esc(category.label)}">
-        ${image}
-        <div class="portfolio-caption"><small>CATEGORÍA ${String(index+1).padStart(2,"0")}</small><b>${esc(category.label)}</b><span class="portfolio-open">Explorar categoría ↗</span></div>
-      </a>`;
-    }).join("");
-    $("#portfolio-note").textContent = "Una vista previa de nuestras cuatro áreas creativas. Explora cada categoría o visita el portafolio completo.";
-  }
+
+  // La portada siempre presenta las categorías. Cada una utiliza como miniatura
+  // un proyecto destacado de esa categoría; si no existe, usa el más reciente.
+  grid.innerHTML = portfolioPreviewCategories.map((category,index) => {
+    const matching = uniqueItems.filter(item => projectMatchesPreviewCategory(item,category));
+    const project = matching.find(item => item.featured === true && (item.coverUrl || item.mediaUrl || item.imageUrl || item.youtubeId))
+      || matching.find(item => item.coverUrl || item.mediaUrl || item.imageUrl || item.youtubeId);
+    const cover = project?.coverUrl || project?.mediaUrl || project?.imageUrl || (project?.youtubeId ? `https://img.youtube.com/vi/${encodeURIComponent(project.youtubeId)}/hqdefault.jpg` : "");
+    const target = `galeria.html?categoria=${encodeURIComponent(category.key)}`;
+    const image = cover
+      ? `<img src="${esc(optimizedImage(cover,760))}" alt="Miniatura de ${esc(category.label)}" loading="lazy" decoding="async">`
+      : `<div class="portfolio-category-fallback"><span>${String(index+1).padStart(2,"0")}</span><b>${esc(category.label)}</b></div>`;
+    return `<a class="portfolio-item portfolio-category-card" href="${target}" aria-label="Ver todos los proyectos de ${esc(category.label)}">
+      ${image}
+      <div class="portfolio-caption"><small>CATEGORÍA ${String(index+1).padStart(2,"0")}</small><b>${esc(category.label)}</b><span class="portfolio-open">Explorar categoría ↗</span></div>
+    </a>`;
+  }).join("");
+  $("#portfolio-note").textContent = "Explora nuestros proyectos por categoría.";
   document.dispatchEvent(new Event("jeyr:content-updated"));
 }
 function renderBrands(items) {
@@ -152,5 +145,6 @@ $("#contact-form").addEventListener("submit", async (e) => {
 });
 (async function init(){
   track("page_view");
-  await Promise.all([loadSettings(), getPublished("portfolio").then(renderPortfolio), getPublished("brands").then(renderBrands)]);
+  const [portfolioItems,videoItems] = await Promise.all([getPublished("portfolio"),getPublished("videos")]);
+  await Promise.all([loadSettings(), Promise.resolve(renderPortfolio([...portfolioItems,...videoItems])), getPublished("brands").then(renderBrands)]);
 })();

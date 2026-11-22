@@ -444,3 +444,7 @@ a[role="link"]:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
 .service-social h3{max-width:290px}
 .category-price{display:block;margin-top:10px;color:#75ddeb;font-size:11px;font-weight:700;letter-spacing:.03em}
 
+
+/* Icono de pantalla para Diseño gráfico & branding */
+.service-design-icon{width:46px;height:46px;display:grid;place-items:center;color:#5ee5f1}
+.service-design-icon svg{width:42px;height:42px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 9px rgba(0,191,255,.22))}
