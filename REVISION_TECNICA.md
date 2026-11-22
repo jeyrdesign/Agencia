@@ -78,3 +78,10 @@ No se ejecutó una sesión real en el dominio publicado ni se pudo confirmar el 
 - Las imágenes se presentan completas, centradas y sin recorte ni deformación mediante `object-fit: contain`.
 - Los textos de las tarjetas usan un espacio de altura uniforme para evitar variaciones en la cuadrícula.
 - Validación realizada: HTML parseable y sintaxis JavaScript sin cambios en los scripts. No se ejecutó prueba visual en navegador ni consulta real a Firebase/Cloudinary.
+
+
+## Favicon actualizado (22-11-2026)
+- Se utilizó directamente la imagen original suministrada por el cliente (Mesa de trabajo 4.png).
+- Se conservó el degradado azul/cian original y el símbolo blanco; únicamente se aplicó redondeo de esquinas.
+- Se generaron SVG, PNG de 512/180/64/32 px y favicon.ico multirresolución.
+- Este paquete parte de JEYR_DESIGN_PORTAFOLIO_FILTER_CARDS.zip, que contiene las dos correcciones de navegación solicitadas.
