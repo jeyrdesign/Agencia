@@ -26,18 +26,19 @@ $("#year").textContent = new Date().getFullYear();
 $("#menu-toggle").addEventListener("click", () => $("#main-nav").classList.toggle("open"));
 document.querySelectorAll("#main-nav a").forEach(a => a.addEventListener("click", () => $("#main-nav").classList.remove("open")));
 
-// La tarjeta completa abre el portafolio de su categoría; el enlace interno conserva su destino de paquetes.
-document.querySelectorAll(".service-card[data-portfolio-url]").forEach(card => {
-  const navigateToCategory = event => {
+// Toda la tarjeta abre los paquetes de su categoría. El enlace interno también navega
+// directamente y no dispara la navegación duplicada de la tarjeta.
+document.querySelectorAll(".service-card[data-package-url]").forEach(card => {
+  const navigateToPackages = event => {
     if (event.target.closest(".service-action")) return;
-    const destination = card.dataset.portfolioUrl;
+    const destination = card.dataset.packageUrl;
     if (destination) window.location.assign(new URL(destination, document.baseURI).href);
   };
-  card.addEventListener("click", navigateToCategory);
+  card.addEventListener("click", navigateToPackages);
   card.addEventListener("keydown", event => {
     if (event.target !== card || (event.key !== "Enter" && event.key !== " ")) return;
     event.preventDefault();
-    navigateToCategory(event);
+    navigateToPackages(event);
   });
 });
 
