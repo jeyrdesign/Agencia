@@ -81,20 +81,32 @@ function renderPortfolio(items) {
   const grid = $("#portfolio-grid");
   if (!grid) return;
   const uniqueItems = uniqueBy(items, x => `${normalize(x.title)}|${normalize(x.category)}`);
+  const selected = uniqueItems.filter(item => item.featured === true && (item.coverUrl || item.mediaUrl || item.imageUrl)).slice(0,4);
   grid.classList.add("portfolio-category-grid");
-  grid.innerHTML = portfolioPreviewCategories.map((category,index) => {
-    const project = uniqueItems.find(item => projectMatchesPreviewCategory(item,category));
-    const cover = project?.coverUrl || project?.mediaUrl || project?.imageUrl || "";
-    const target = `galeria.html?categoria=${encodeURIComponent(category.key)}`;
-    const image = cover
-      ? `<img src="${esc(optimizedImage(cover,760))}" alt="${esc(category.label)}" loading="lazy" decoding="async">`
-      : `<div class="portfolio-category-fallback"><span>${String(index+1).padStart(2,"0")}</span><b>${esc(category.label)}</b></div>`;
-    return `<a class="portfolio-item portfolio-category-card" href="${target}" aria-label="Ver todos los proyectos de ${esc(category.label)}">
-      ${image}
-      <div class="portfolio-caption"><small>CATEGORÍA ${String(index+1).padStart(2,"0")}</small><b>${esc(category.label)}</b><span class="portfolio-open">Explorar categoría ↗</span></div>
-    </a>`;
-  }).join("");
-  $("#portfolio-note").textContent = "Una vista previa de nuestras cuatro áreas creativas. Explora cada categoría o visita el portafolio completo.";
+  if (selected.length) {
+    grid.innerHTML = selected.map((project,index) => {
+      const cover = project.coverUrl || project.mediaUrl || project.imageUrl;
+      return `<a class="portfolio-item portfolio-category-card portfolio-selected-card" href="galeria.html?id=${encodeURIComponent(project.id)}" aria-label="Abrir proyecto ${esc(project.title||"JEYR DESIGN")}">
+        <img src="${esc(optimizedImage(cover,900))}" alt="${esc(project.title||"Proyecto JEYR DESIGN")}" loading="lazy" decoding="async">
+        <div class="portfolio-caption"><small>${esc(project.category||"PROYECTO")} · ${String(index+1).padStart(2,"0")}</small><b>${esc(project.title||"JEYR DESIGN")}</b><span class="portfolio-open">Ver proyecto ↗</span></div>
+      </a>`;
+    }).join("");
+    $("#portfolio-note").textContent = "Una selección de proyectos destacados. Explora cada trabajo o visita el portafolio completo.";
+  } else {
+    grid.innerHTML = portfolioPreviewCategories.map((category,index) => {
+      const project = uniqueItems.find(item => projectMatchesPreviewCategory(item,category));
+      const cover = project?.coverUrl || project?.mediaUrl || project?.imageUrl || "";
+      const target = `galeria.html?categoria=${encodeURIComponent(category.key)}`;
+      const image = cover
+        ? `<img src="${esc(optimizedImage(cover,760))}" alt="${esc(category.label)}" loading="lazy" decoding="async">`
+        : `<div class="portfolio-category-fallback"><span>${String(index+1).padStart(2,"0")}</span><b>${esc(category.label)}</b></div>`;
+      return `<a class="portfolio-item portfolio-category-card" href="${target}" aria-label="Ver todos los proyectos de ${esc(category.label)}">
+        ${image}
+        <div class="portfolio-caption"><small>CATEGORÍA ${String(index+1).padStart(2,"0")}</small><b>${esc(category.label)}</b><span class="portfolio-open">Explorar categoría ↗</span></div>
+      </a>`;
+    }).join("");
+    $("#portfolio-note").textContent = "Una vista previa de nuestras cuatro áreas creativas. Explora cada categoría o visita el portafolio completo.";
+  }
   document.dispatchEvent(new Event("jeyr:content-updated"));
 }
 function renderBrands(items) {
@@ -119,21 +131,6 @@ function renderBrands(items) {
   }, {once:true}));
 }
 
-async function renderDigitalPackagePreview(){
-  const target=$("#digital-package-preview");
-  if(!target) return;
-  try{
-    const snap=await getDocs(query(collection(db,"packages"),where("published","==",true),limit(100)));
-    const items=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>{
-      const cat=normalize(x.category||"");
-      return /digital|redes|social|contenido|community|marketing/.test(cat);
-    });
-    if(!items.length){target.textContent="Planes personalizados según los objetivos de tu marca.";return;}
-    const min=Math.min(...items.map(x=>Number(x.price)).filter(n=>Number.isFinite(n)&&n>=0));
-    target.innerHTML=Number.isFinite(min)?`<span>Planes desde</span><b>$${min.toLocaleString("es-EC",{minimumFractionDigits:0,maximumFractionDigits:2})}</b>`:`<span>Planes personalizados</span>`;
-  }catch(e){console.warn("No se pudieron mostrar los precios digitales",e);target.textContent="Planes personalizados para tu marca.";}
-}
-
 async function track(type, extra={}) {
   try { await addDoc(collection(db,"analyticsEvents"), {type, page:location.pathname, ...extra, createdAt:serverTimestamp()}); }
   catch(e) { /* Las reglas pueden estar pendientes de publicar. */ }
@@ -155,5 +152,5 @@ $("#contact-form").addEventListener("submit", async (e) => {
 });
 (async function init(){
   track("page_view");
-  await Promise.all([loadSettings(), getPublished("portfolio").then(renderPortfolio), getPublished("brands").then(renderBrands), renderDigitalPackagePreview()]);
+  await Promise.all([loadSettings(), getPublished("portfolio").then(renderPortfolio), getPublished("brands").then(renderBrands)]);
 })();

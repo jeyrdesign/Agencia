@@ -28,7 +28,7 @@ No se ejecutó una sesión real en el dominio publicado ni se pudo confirmar el 
 ## Ajuste de navegación y miniaturas (18-11-2026)
 - Las tarjetas de servicios abren el portafolio de su categoría al pulsar fuera del enlace «Explorar paquetes»; el enlace de paquetes mantiene su destino independiente.
 - La portada muestra cuatro miniaturas de categorías (diseño/branding, fotografía, audiovisual y comunicación digital). Cada miniatura abre la categoría correspondiente.
-- En móviles, las miniaturas se presentan en una columna, con proporción vertical 4:5 y `object-fit: cover` para conservar dimensiones sin deformación.
+- La presentación anterior de miniaturas por categoría fue sustituida en esta entrega por miniaturas con altura automática y proporción natural; no se fuerza una relación 4:5 ni se recorta la fotografía.
 - La página de portafolio completo conserva el filtro general y todas las categorías disponibles.
 
 
@@ -46,8 +46,8 @@ No se ejecutó una sesión real en el dominio publicado ni se pudo confirmar el 
 - Se añadió `Administración > Gestión digital`, con alta/edición/eliminación y publicación de marcas, estadísticas manuales, historial mensual, enlaces de Reels/YouTube con métricas individuales opcionales de alcance, reproducciones e interacciones, y carga de fotografías/diseños a Cloudinary. Los datos de estadísticas son manuales, no se consultan automáticamente desde Instagram.
 - La nueva colección Firestore es `socialBrands`. La regla incluida permite lectura pública solo a documentos publicados y escritura únicamente al administrador propietario. **Esta regla debe publicarse en Firebase Console > Firestore Database > Rules** antes de activar la sección.
 - Los paquetes conservan la colección `packages`. Se añadió la categoría canónica `Gestión de redes + creación de contenidos`, manteniendo compatibilidad con registros antiguos de `Paquetes Digitales` y `Comunicación digital`.
-- Los precios publicados se muestran en la tarjeta 04 de la página principal, en las tarjetas del índice de paquetes y en la ficha de cada paquete. El administrador muestra categoría y precio y permite editarlos desde el mismo registro.
-- El holograma del hero se rediseñó como una proyección técnica de lente/diafragma fotográfico con interfaz y retícula, en lugar de una composición basada principalmente en halos. Los tres avatares de prueba se reemplazaron por símbolos SVG de diseño, fotografía y vídeo en la paleta JEYR.
+- Los precios de Gestión digital ya no se muestran en la tarjeta 04 de la página principal. Los paquetes y precios se consultan al entrar a la sección de paquetes digitales. El administrador muestra categoría y precio y permite editarlos desde el mismo registro.
+- El holograma del hero conserva su recurso visual existente. Se retiró el bloque de avatares y el texto «Creatividad con propósito · Diseño · Fotografía · Audiovisual», junto con el espacio que ocupaba.
 
 ## Verificación de esta entrega
 - Sintaxis de los archivos JavaScript comprobada con Node.js en modo módulo.
@@ -55,3 +55,11 @@ No se ejecutó una sesión real en el dominio publicado ni se pudo confirmar el 
 - SVG del holograma, favicon y logotipo comprobados como XML válido.
 - Balance de llaves de los archivos CSS comprobado.
 - Se intentó una prueba de navegación con Chromium local, pero el entorno bloqueó la navegación del navegador a `127.0.0.1` (`ERR_BLOCKED_BY_ADMINISTRATOR`). Por ello no se declara una prueba real de navegador, ni se afirma que Firebase/Cloudinary hayan sido verificados en producción. La conexión real depende de publicar las reglas actualizadas y probar con el proyecto Firebase existente.
+
+
+## Ajustes solicitados (22-11-2026)
+- En «Quiénes somos» se reemplazó únicamente el texto de presentación por el texto cristocéntrico aprobado; se conservaron el encabezado, la estructura, el enlace y los estilos del bloque.
+- Se retiró el bloque de texto e iconos situado debajo de las acciones del hero, eliminando también su espacio.
+- La tarjeta 04 de la página principal ya no consulta ni muestra precios de paquetes. El enlace «Ver paquetes y precios» conserva su destino a la página de paquetes digitales.
+- En Administración > Portafolio se añadió la opción «Mostrar este proyecto en 03 / TRABAJO SELECCIONADO». La página principal muestra hasta cuatro proyectos seleccionados y enlaza cada miniatura a su galería individual. Si todavía no hay proyectos seleccionados, se conserva la vista previa de categorías como alternativa.
+- Las miniaturas de «Trabajo seleccionado» y de la vista previa conservan la proporción original de las portadas: ancho adaptable, altura automática y sin recorte ni estiramiento.
