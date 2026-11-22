@@ -24,6 +24,10 @@ service cloud.firestore {
       allow read: if resource.data.published == true || owner();
       allow create, update, delete: if owner();
     }
+    match /socialBrands/{id} {
+      allow read: if resource.data.published == true || owner();
+      allow create, update, delete: if owner();
+    }
     match /packages/{id} {
       allow read: if resource.data.published == true || owner();
       allow create, update, delete: if owner();

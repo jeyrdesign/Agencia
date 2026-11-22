@@ -118,6 +118,22 @@ function renderBrands(items) {
     img.replaceWith(fallback);
   }, {once:true}));
 }
+
+async function renderDigitalPackagePreview(){
+  const target=$("#digital-package-preview");
+  if(!target) return;
+  try{
+    const snap=await getDocs(query(collection(db,"packages"),where("published","==",true),limit(100)));
+    const items=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>{
+      const cat=normalize(x.category||"");
+      return /digital|redes|social|contenido|community|marketing/.test(cat);
+    });
+    if(!items.length){target.textContent="Planes personalizados según los objetivos de tu marca.";return;}
+    const min=Math.min(...items.map(x=>Number(x.price)).filter(n=>Number.isFinite(n)&&n>=0));
+    target.innerHTML=Number.isFinite(min)?`<span>Planes desde</span><b>$${min.toLocaleString("es-EC",{minimumFractionDigits:0,maximumFractionDigits:2})}</b>`:`<span>Planes personalizados</span>`;
+  }catch(e){console.warn("No se pudieron mostrar los precios digitales",e);target.textContent="Planes personalizados para tu marca.";}
+}
+
 async function track(type, extra={}) {
   try { await addDoc(collection(db,"analyticsEvents"), {type, page:location.pathname, ...extra, createdAt:serverTimestamp()}); }
   catch(e) { /* Las reglas pueden estar pendientes de publicar. */ }
@@ -139,5 +155,5 @@ $("#contact-form").addEventListener("submit", async (e) => {
 });
 (async function init(){
   track("page_view");
-  await Promise.all([loadSettings(), getPublished("portfolio").then(renderPortfolio), getPublished("brands").then(renderBrands)]);
+  await Promise.all([loadSettings(), getPublished("portfolio").then(renderPortfolio), getPublished("brands").then(renderBrands), renderDigitalPackagePreview()]);
 })();

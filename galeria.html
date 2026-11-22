@@ -11,13 +11,42 @@
     @media(max-width:800px){.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gallery-hero{padding-top:65px}}
     @media(max-width:520px){.gallery-grid{grid-template-columns:1fr;gap:12px}.gallery-photo{aspect-ratio:4/5}.gallery-hero{padding-top:45px}.lightbox{padding:12px}}
     @media(prefers-reduced-motion:reduce){.gallery-photo img{transition:none}}
+    /* Las fotografías de cada proyecto conservan su relación de aspecto real. */
+    .gallery-grid:not(.full-portfolio-grid):not(.youtube-detail-grid){align-items:start;grid-auto-rows:auto}
+    .gallery-photo{display:block;width:100%;height:auto;min-width:0;aspect-ratio:auto;padding:0;line-height:0;align-self:start}
+    .gallery-photo img{display:block;width:100%;height:auto;max-height:none;object-fit:contain;aspect-ratio:auto}
+    /* El atributo hidden debe prevalecer sobre el display:flex del grupo de filtros. */
+    .full-portfolio-filters[hidden]{display:none!important}
+    .full-portfolio-filters{align-items:center}
+    .full-portfolio-filters .filters-title{flex:0 0 auto;color:var(--muted);font-size:9px;letter-spacing:.12em;margin-right:5px}
+    @media(max-width:520px){
+      .gallery-grid:not(.full-portfolio-grid):not(.youtube-detail-grid){grid-template-columns:minmax(0,1fr);gap:14px}
+      .gallery-photo{aspect-ratio:auto}
+      .gallery-photo img{height:auto;object-fit:contain}
+      .full-portfolio-filters{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;white-space:nowrap;padding:2px 0 12px;scrollbar-width:thin;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+      .full-portfolio-filters button{flex:0 0 auto;scroll-snap-align:start}
+      .full-portfolio-filters .filters-title{position:sticky;left:0;background:#07121d;padding:8px 5px 8px 0;z-index:2}
+    }
+    /* Portafolio: las miniaturas usan la proporción intrínseca de cada archivo. */
+    .full-portfolio-grid{grid-auto-rows:auto!important;align-items:start;grid-auto-flow:row;}
+    .full-project,.full-project:nth-child(5n+1),.full-project:nth-child(5n+3){position:relative;display:flex;flex-direction:column;align-self:start;grid-row:auto!important;height:auto;min-height:0;overflow:hidden;}
+    .full-project>img{position:static!important;inset:auto!important;display:block;width:100%;height:auto!important;max-height:none;object-fit:contain!important;aspect-ratio:auto!important;transform:none;}
+    .full-project:hover>img{transform:none;filter:saturate(1.06);}
+    .full-project::after{display:none!important;}
+    .full-project-caption{position:static;left:auto;right:auto;bottom:auto;padding:15px 16px 17px;background:linear-gradient(180deg,rgba(7,18,29,.96),rgba(7,18,29,1));}
+    .full-video-project>img{aspect-ratio:16/9!important;object-fit:cover!important;}
+    .full-video-project .video-play-mark{top:35%;}
+    .full-project .portfolio-event-empty{min-height:150px;display:grid;place-items:center;}
+    .full-portfolio-filters[hidden]{display:none!important;}
+    @media(max-width:800px){.full-portfolio-grid{grid-auto-rows:auto!important;}}
+    @media(max-width:520px){.full-portfolio-grid{grid-template-columns:1fr;grid-auto-rows:auto!important;}.full-project,.full-project:nth-child(5n+1),.full-project:nth-child(5n+3){grid-row:auto!important;}}
   </style>
   <link rel="preconnect" href="https://www.gstatic.com" crossorigin><link rel="preconnect" href="https://firestore.googleapis.com"><link rel="preconnect" href="https://res.cloudinary.com">
 </head>
 <body>
   <div class="noise"></div>
   <header class="site-header"><a class="brand" href="index.html"><img class="brand-logo-mark" src="assets/img/jeyr-logo.svg" alt="JEYR DESIGN"></a><nav id="main-nav"><a href="index.html#nosotros">Nosotros</a><a href="index.html#servicios">Servicios</a><a href="index.html#portafolio">Portafolio</a><a class="nav-cta" href="index.html#contacto">Hablemos <span>↗</span></a></nav><button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">☰</button></header>
-  <main class="section-wrap"><section class="gallery-hero"><div class="section-kicker">JEYR DESIGN / PORTAFOLIO</div><h1 id="gallery-title">Cargando portafolio<span>…</span></h1><p class="gallery-description" id="gallery-description"></p><div class="gallery-project-meta" id="gallery-project-meta" aria-live="polite"></div><a class="gallery-back" id="gallery-back" href="index.html#portafolio">← Volver al sitio</a></section><div class="full-portfolio-filters" id="full-portfolio-filters" role="group" aria-label="Filtrar proyectos" hidden><button type="button" data-filter="all" class="is-active" aria-pressed="true">Todos</button><button type="button" data-filter="fotografia" aria-pressed="false">Fotografía</button><button type="button" data-filter="eventos" aria-pressed="false">Eventos</button><button type="button" data-filter="deportes" aria-pressed="false">Deportes</button><button type="button" data-filter="xv" aria-pressed="false">XV años</button><button type="button" data-filter="diseno" aria-pressed="false">Diseño gráfico</button><button type="button" data-filter="branding" aria-pressed="false">Branding</button><button type="button" data-filter="audiovisual" aria-pressed="false">Producción audiovisual</button><button type="button" data-filter="digitales" aria-pressed="false">Comunicación digital</button></div><section id="gallery-grid" class="gallery-grid"><p class="gallery-loading">Preparando fotografías…</p></section></main>
+  <main class="section-wrap"><section class="gallery-hero"><div class="section-kicker">JEYR DESIGN / PORTAFOLIO</div><h1 id="gallery-title">Cargando portafolio<span>…</span></h1><p class="gallery-description" id="gallery-description"></p><div class="gallery-project-meta" id="gallery-project-meta" aria-live="polite"></div><a class="gallery-back" id="gallery-back" href="index.html#portafolio">← Volver al sitio</a></section><div class="full-portfolio-filters" id="full-portfolio-filters" role="group" aria-label="Filtrar proyectos" hidden><span class="filters-title">FILTRAR POR</span><button type="button" data-filter="all" class="is-active" aria-pressed="true">Todos</button><button type="button" data-filter="fotografia" aria-pressed="false">Fotografía</button><button type="button" data-filter="eventos" aria-pressed="false">Eventos</button><button type="button" data-filter="deportes" aria-pressed="false">Deportes</button><button type="button" data-filter="xv" aria-pressed="false">XV años</button><button type="button" data-filter="diseno" aria-pressed="false">Diseño gráfico</button><button type="button" data-filter="branding" aria-pressed="false">Branding</button><button type="button" data-filter="audiovisual" aria-pressed="false">Producción audiovisual</button><button type="button" data-filter="digitales" aria-pressed="false">Comunicación digital</button></div><section id="gallery-grid" class="gallery-grid"><p class="gallery-loading">Preparando fotografías…</p></section></main>
   <footer class="site-footer"><p class="footer-slogan">Los mejores, <em>con los mejores.</em></p><div><a href="https://www.instagram.com/jeyrdesign/" target="_blank" rel="noopener">Instagram ↗</a><a href="index.html">Inicio</a></div><small>© <span id="year"></span> JEYR DESIGN · Babahoyo, Ecuador</small></footer>
   <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Fotografía ampliada"><button id="lightbox-close" aria-label="Cerrar">×</button><img id="lightbox-image" alt="Fotografía ampliada"></div>
 <script src="assets/js/link-navigation.js"></script>

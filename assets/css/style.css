@@ -440,3 +440,16 @@ a[role="link"]:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
 .portfolio-category-fallback b { max-width:85%; font:700 20px/1.15 var(--display); }
 @media(max-width:800px) { .portfolio-category-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; } .portfolio-category-card { aspect-ratio:4 / 5; } }
 @media(max-width:520px) { .portfolio-category-grid { grid-template-columns:minmax(0,1fr); gap:14px; } .portfolio-category-card { width:100%; aspect-ratio:4 / 5; min-height:0; } .portfolio-category-card .portfolio-caption { padding:58px 18px 19px; } .portfolio-category-card .portfolio-caption b { font-size:18px; } .portfolio-category-fallback { padding:24px; } }
+
+/* JEYR DESIGN · Gestión digital y símbolos de identidad visual */
+.proof-avatars{display:flex;align-items:center}
+.proof-avatar{display:grid;place-items:center;width:34px;height:34px;margin-left:-8px;border-radius:11px;border:1px solid rgba(111,226,245,.55);background:linear-gradient(145deg,#153b50,#0b1c2b);box-shadow:0 5px 16px #0005;color:#70e6f3}
+.proof-avatar:first-child{margin-left:0}.proof-avatar svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.avatar-design svg{fill:rgba(0,191,255,.12)}.avatar-design svg circle{fill:#78f2fa;stroke:none}.avatar-video svg path{fill:#78f2fa;stroke:none}
+.service-social .service-social-icon{width:46px;height:46px;display:grid;place-items:center;color:#5ee5f1}
+.service-social-icon svg{width:42px;height:42px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 9px rgba(0,191,255,.22))}
+.service-social-icon svg rect:nth-of-type(2){fill:rgba(0,191,255,.10)}
+.service-package-preview{display:flex;align-items:baseline;gap:8px;margin:0 0 13px;color:#9cb7c8;font-size:10px;letter-spacing:.06em}
+.service-package-preview b{font:800 20px var(--display);color:#77e7f2;letter-spacing:-.04em}
+.service-social h3{max-width:290px}
+.category-price{display:block;margin-top:10px;color:#75ddeb;font-size:11px;font-weight:700;letter-spacing:.03em}
+@media(max-width:650px){.proof-avatar{width:31px;height:31px;border-radius:9px}.service-package-preview{font-size:9px}.service-package-preview b{font-size:18px}}

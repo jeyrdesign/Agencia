@@ -1,23 +1,46 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" fill="none">
 <defs>
- <linearGradient id="ribbon" x1="120" y1="150" x2="790" y2="1020" gradientUnits="userSpaceOnUse"><stop stop-color="#00E5FF" stop-opacity=".05"/><stop offset=".32" stop-color="#00BFFF" stop-opacity=".62"/><stop offset=".68" stop-color="#176BFF" stop-opacity=".34"/><stop offset="1" stop-color="#00E5FF" stop-opacity=".08"/></linearGradient>
- <linearGradient id="edge" x1="160" y1="200" x2="780" y2="980" gradientUnits="userSpaceOnUse"><stop stop-color="#7AF7FF"/><stop offset=".5" stop-color="#00BFFF"/><stop offset="1" stop-color="#168BFF"/></linearGradient>
- <radialGradient id="glow"><stop stop-color="#00CFFF" stop-opacity=".22"/><stop offset="1" stop-color="#00CFFF" stop-opacity="0"/></radialGradient>
- <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#66EFFF" opacity=".62"/></pattern>
- <filter id="blur"><feGaussianBlur stdDeviation="18"/></filter>
- <filter id="shine"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <linearGradient id="glass" x1="210" y1="260" x2="730" y2="890" gradientUnits="userSpaceOnUse"><stop stop-color="#8DFBFF" stop-opacity=".75"/><stop offset=".48" stop-color="#00BFFF" stop-opacity=".26"/><stop offset="1" stop-color="#176BFF" stop-opacity=".12"/></linearGradient>
+ <linearGradient id="edge" x1="220" y1="230" x2="700" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#A4FFFF"/><stop offset=".52" stop-color="#00C8FF"/><stop offset="1" stop-color="#287BFF"/></linearGradient>
+ <radialGradient id="lens"><stop stop-color="#0B6B92" stop-opacity=".72"/><stop offset=".48" stop-color="#061A2D" stop-opacity=".96"/><stop offset=".8" stop-color="#0A3855" stop-opacity=".7"/><stop offset="1" stop-color="#00CFFF" stop-opacity=".1"/></radialGradient>
+ <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" stroke="#52E9FF" stroke-opacity=".22" stroke-width=".8"/></pattern>
+ <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="26"/></filter>
 </defs>
-<ellipse cx="510" cy="650" rx="360" ry="480" fill="url(#glow)"/>
-<g opacity=".55" stroke="#00BFFF"><ellipse cx="480" cy="580" rx="360" ry="480" transform="rotate(-16 480 580)"/><ellipse cx="480" cy="580" rx="310" ry="430" transform="rotate(19 480 580)" stroke-dasharray="3 14"/><path d="M115 390L790 770M160 850L810 330" opacity=".42"/></g>
-<path d="M180 250C370 80 730 170 760 390C790 590 310 570 210 770C110 970 520 1110 770 900" stroke="url(#ribbon)" stroke-width="115" opacity=".32" filter="url(#blur)"/>
-<path d="M170 280C380 100 740 190 760 400C780 590 320 590 210 790C110 990 520 1100 770 900" stroke="url(#ribbon)" stroke-width="68" opacity=".62"/>
-<path d="M170 280C380 100 740 190 760 400C780 590 320 590 210 790C110 990 520 1100 770 900" stroke="url(#edge)" stroke-width="3" filter="url(#shine)"/>
-<path d="M115 520C310 340 730 350 800 560C870 770 300 820 190 980" stroke="#00D9FF" stroke-width="24" opacity=".16"/>
-<path d="M115 520C310 340 730 350 800 560C870 770 300 820 190 980" stroke="#42E9FF" stroke-width="2" opacity=".9" filter="url(#shine)"/>
-<path d="M250 170V1010M330 130V1060M690 150V1000M760 220V930" stroke="#00BFFF" stroke-width="1" opacity=".2"/>
-<path d="M400 230C600 310 700 480 650 650C600 820 380 900 300 1040" stroke="#147BFF" stroke-width="4" opacity=".55"/>
-<path d="M455 230C655 320 750 490 690 660C630 830 430 900 360 1050" stroke="#4CEBFF" stroke-width="1.5" opacity=".75"/>
-<rect x="585" y="260" width="175" height="470" fill="url(#dots)" opacity=".45"/>
-<g fill="#73F5FF" filter="url(#shine)"><circle cx="760" cy="400" r="5"/><circle cx="210" cy="790" r="4"/><circle cx="650" cy="650" r="4"/><circle cx="330" cy="1060" r="3"/></g>
-<g transform="translate(450 1050)"><ellipse rx="310" ry="62" fill="#00BFFF" opacity=".12" filter="url(#blur)"/><ellipse rx="280" ry="42" stroke="#00DFFF" stroke-width="3" opacity=".8"/><ellipse rx="225" ry="27" stroke="#168BFF" stroke-width="2"/><ellipse rx="155" ry="16" stroke="#75F7FF" stroke-width="2" filter="url(#shine)"/><path d="M-280 0H280" stroke="#00BFFF" opacity=".35"/></g>
+<!-- Proyección de interfaz y plano técnico -->
+<path d="M105 220 690 110 820 920 230 1050Z" fill="url(#grid)" opacity=".34"/>
+<path d="M120 250 760 130M150 960 790 840M180 170V1010M760 120V930" stroke="#2CCEFF" stroke-opacity=".28" stroke-dasharray="4 12"/>
+<g opacity=".72" stroke="#4DEBFF" stroke-width="1.4"><path d="M120 340h105v-70h74M670 210h110v105h-72M110 820h130v80h90M680 800h110v-90h-70"/><path d="M135 390h65m-65 12h95m-95 12h48M685 330h80m-80 12h54m-54 12h92" opacity=".55"/></g>
+<!-- Cámara / lente holográfica central -->
+<ellipse cx="475" cy="570" rx="330" ry="390" fill="#00BFFF" opacity=".12" filter="url(#soft)"/>
+<g transform="translate(475 565) rotate(-12)">
+ <path d="M-245-210 0-280 245-210 280 0 245 210 0 280-245 210-280 0Z" fill="#071827" fill-opacity=".55" stroke="url(#edge)" stroke-width="3" filter="url(#glow)"/>
+ <path d="M-205-175 0-235 205-175 235 0 205 175 0 235-205 175-235 0Z" fill="url(#glass)" fill-opacity=".18" stroke="#66F5FF" stroke-opacity=".7" stroke-width="1.5"/>
+ <circle r="184" fill="url(#lens)" stroke="#4CEBFF" stroke-width="2.5"/>
+ <circle r="154" stroke="#79F7FF" stroke-opacity=".65" stroke-width="1.4" stroke-dasharray="5 10"/>
+ <circle r="126" stroke="#168BFF" stroke-width="3" stroke-opacity=".8"/>
+ <circle r="103" fill="#061522" stroke="url(#edge)" stroke-width="2"/>
+ <!-- Ocho hojas de diafragma -->
+ <g fill="#0A3149" fill-opacity=".88" stroke="#67EFFF" stroke-opacity=".8" stroke-width="2">
+  <path d="M-22-88 55-104 88-25 28 28-40 8Z"/>
+  <path d="M22-88 55-104 88-25 28 28-40 8Z" transform="rotate(60)"/>
+  <path d="M22-88 55-104 88-25 28 28-40 8Z" transform="rotate(120)"/>
+  <path d="M22-88 55-104 88-25 28 28-40 8Z" transform="rotate(180)"/>
+  <path d="M22-88 55-104 88-25 28 28-40 8Z" transform="rotate(240)"/>
+  <path d="M22-88 55-104 88-25 28 28-40 8Z" transform="rotate(300)"/>
+ </g>
+ <circle r="31" fill="#06253B" stroke="#8EFAFF" stroke-width="2" filter="url(#glow)"/>
+ <circle r="11" fill="#A5FFFF" fill-opacity=".8"/>
+ <path d="M-260 0h-40m560 0h-40M0-300v-38m0 676v-38" stroke="#80F7FF" stroke-width="2"/>
+</g>
+<!-- Capas flotantes de información -->
+<g fill="#061A2B" fill-opacity=".82" stroke="#4DEBFF" stroke-opacity=".75">
+ <path d="M80 300h170l28 22v84H80Z"/><path d="M660 410h150l24 20v90H660Z"/><path d="M105 840h205l24 18v72H105Z"/>
+</g>
+<g stroke="#78F4FF" stroke-width="2" opacity=".82"><path d="M105 330h94m-94 16h125m-125 16h68M685 445h86m-86 16h104m-104 16h62M130 870h128m-128 15h86"/></g>
+<g fill="#9BFFFF" filter="url(#glow)"><circle cx="250" cy="322" r="4"/><circle cx="660" cy="410" r="4"/><circle cx="335" cy="930" r="4"/><circle cx="720" cy="740" r="3"/></g>
+<!-- Haz de proyección y base técnica -->
+<path d="M475 855 355 1060h240Z" fill="url(#glass)" fill-opacity=".08" stroke="#35DFFF" stroke-opacity=".42"/>
+<path d="M190 1060h570M245 1080h460M330 1100h290" stroke="#38DDF8" stroke-opacity=".38"/>
+<ellipse cx="475" cy="1060" rx="285" ry="42" fill="#00BFFF" fill-opacity=".12" filter="url(#soft)"/>
 </svg>

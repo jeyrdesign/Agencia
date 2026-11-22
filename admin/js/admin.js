@@ -6,10 +6,10 @@ import {
 } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 
 const $ = s => document.querySelector(s);
-const S = { user:null, data:{portfolio:[],videos:[],brands:[],packages:[],messages:[]}, loaded:{}, kind:null, item:null, busy:false, analytics:[] };
+const S = { user:null, data:{portfolio:[],videos:[],brands:[],socialBrands:[],packages:[],messages:[]}, loaded:{}, kind:null, item:null, busy:false, analytics:[] };
 const CLOUDINARY_DEFAULTS = { cloudName:"bktloafr", uploadPreset:"jeyr_unsigned" };
 let cloudConfigPromise = null;
-const names = {overview:"Resumen general",portfolio:"Portafolio",videos:"Videos de YouTube",brands:"Marcas colaboradoras",packages:"Servicios y paquetes",messages:"Mensajes",analytics:"Estadísticas",settings:"Configuración"};
+const names = {social:"Gestión digital",overview:"Resumen general",portfolio:"Portafolio",videos:"Videos de YouTube",brands:"Marcas colaboradoras",packages:"Servicios y paquetes",messages:"Mensajes",analytics:"Estadísticas",settings:"Configuración"};
 const esc = s => String(s ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const normalize = s => String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("es").replace(/[^a-z0-9]+/g," ").trim().replace(/\s+/g," ");
 const note = s => { $("#notice").textContent = s; };
@@ -36,6 +36,7 @@ async function go(view) {
     if(view==="portfolio"){await rows("portfolio");drawPortfolio();}
     if(view==="videos"){await rows("videos");drawVideos();}
     if(view==="brands"){await rows("brands");drawBrands();}
+    if(view==="social"){await rows("socialBrands");drawSocialBrands();}
     if(view==="packages"){await rows("packages");drawPackages();}
     if(view==="messages") await drawMessages();
     if(view==="analytics") await analytics();
@@ -161,7 +162,7 @@ function parseYouTubeId(value) {
 }
 
 function duplicateKey(kind,data) {
-  if(kind==="brands") return normalize(data.name);
+  if(kind==="brands"||kind==="socialBrands") return normalize(data.name);
   if(kind==="packages") return `${normalize(data.name)}|${normalize(data.category)}`;
   return `${normalize(data.title)}|${normalize(data.category)}`;
 }
@@ -212,20 +213,37 @@ function editor(kind,item=null) {
     <label>Logotipo<input name="media" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" ${item?"":"required"}></label>
     <label>Enlace<input name="url" type="url" value="${esc(item?.url)}"></label>
     <label>Publicado<select name="published"><option value="true" ${item?.published!==false?"selected":""}>Sí</option><option value="false" ${item?.published===false?"selected":""}>No</option></select></label>`;
+  if(kind==="socialBrands") html=`
+    <label>Nombre de la marca<input name="name" required maxlength="100" value="${esc(item?.name)}"></label>
+    <label>Logotipo (opcional)<input name="socialLogo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"></label>
+    <label class="wide">Enlace del perfil social<input name="profileUrl" type="url" placeholder="https://www.instagram.com/marca/" value="${esc(item?.profileUrl)}"></label>
+    <label class="wide">Descripción<textarea name="description" maxlength="800">${esc(item?.description)}</textarea></label>
+    <div class="wide"><h3>Estadísticas actuales</h3><p class="hint">Registra los datos desde Instagram Insights o Meta Business Suite. No son cifras en tiempo real.</p></div>
+    <label>Seguidores<input name="followers" type="number" min="0" step="1" value="${esc(item?.stats?.followers??"")}"></label>
+    <label>Alcance<input name="reach" type="number" min="0" step="1" value="${esc(item?.stats?.reach??"")}"></label>
+    <label>Interacciones<input name="interactions" type="number" min="0" step="1" value="${esc(item?.stats?.interactions??"")}"></label>
+    <label>Reproducciones<input name="views" type="number" min="0" step="1" value="${esc(item?.stats?.views??"")}"></label>
+    <label>Periodo analizado<input name="period" placeholder="Últimos 30 días" value="${esc(item?.stats?.period||"Últimos 30 días")}"></label>
+    <label>Fecha de actualización<input name="updatedAtText" placeholder="20/11/2026" value="${esc(item?.stats?.updatedAt||"")}"></label>
+    <label class="wide">Evolución mensual (una línea por mes: AAAA-MM|seguidores|alcance|interacciones|reproducciones)<textarea name="history" rows="5" placeholder="2026-09|10500|62000|1400|72000&#10;2026-10|11200|71000|1650|89000&#10;2026-11|12500|85200|1900|120000">${esc((item?.history||[]).map(h=>[h.month,h.followers,h.reach??"",h.interactions??"",h.views??""].join("|")).join("\n"))}</textarea></label>
+    <label class="wide">Publicaciones (tipo|título|URL|alcance|reproducciones|interacciones). Los tres últimos datos son opcionales.<textarea name="posts" rows="5" placeholder="Reel|Campaña de temporada|https://www.instagram.com/reel/.../|24000|32000|1800&#10;Diseño|Promoción de noviembre|https://res.cloudinary.com/...|6500||420">${esc((item?.posts||[]).map(p=>[p.type,p.title,p.url||p.mediaUrl||"",p.reach??"",p.views??"",p.interactions??""].join("|")).join("\n"))}</textarea></label>
+    <label class="wide">Subir fotografías y diseños<input name="socialMedia" type="file" accept="image/png,image/jpeg,image/webp" multiple></label>
+    <p class="hint wide">Los enlaces de Instagram deben ser públicos y permitir inserción. Las imágenes que subas se alojan en Cloudinary. Los vídeos se muestran desde Instagram o YouTube mediante enlace.</p>
+    <label>Mostrar en la web<select name="published"><option value="true" ${item?.published!==false?"selected":""}>Sí</option><option value="false" ${item?.published===false?"selected":""}>No</option></select></label>`;
   if(kind==="packages") html=`
     <label>Nombre<input name="name" required maxlength="100" value="${esc(item?.name)}"></label>
     <label>Categoría<select name="category" required>
-      ${["Diseño gráfico & branding","Fotografía profesional","Producción audiovisual","Paquetes Digitales",...(item?.category&&!['Diseño gráfico & branding','Fotografía profesional','Producción audiovisual','Paquetes Digitales'].includes(item.category)?[item.category]:[])].map(v=>`<option value="${esc(v)}" ${item?.category===v?"selected":""}>${esc(v)}</option>`).join("")}
+      ${["Diseño gráfico & branding","Fotografía profesional","Producción audiovisual","Gestión de redes + creación de contenidos","Paquetes Digitales",...(item?.category&&!['Diseño gráfico & branding','Fotografía profesional','Producción audiovisual','Gestión de redes + creación de contenidos','Paquetes Digitales'].includes(item.category)?[item.category]:[])].map(v=>`<option value="${esc(v)}" ${item?.category===v?"selected":""}>${esc(v)}</option>`).join("")}
     </select></label>
     <label>Precio desde USD<input name="price" type="number" min="0" step=".01" required value="${esc(item?.price)}"></label>
     <label>Publicado<select name="published"><option value="true" ${item?.published!==false?"selected":""}>Sí</option><option value="false" ${item?.published===false?"selected":""}>No</option></select></label>
     <label class="wide">Descripción<textarea name="description" maxlength="1200">${esc(item?.description)}</textarea></label>
     <label class="wide">Incluye (una línea por elemento)<textarea name="features">${esc((item?.features||[]).join("\n"))}</textarea></label>`;
-  $("#editor-title").textContent=(item?"Editar ":"Nuevo ")+({portfolio:"proyecto",videos:"video de YouTube",brands:"marca",packages:"paquete"}[kind]);
+  $("#editor-title").textContent=(item?"Editar ":"Nuevo ")+({portfolio:"proyecto",videos:"video de YouTube",brands:"marca",socialBrands:"marca digital",packages:"paquete"}[kind]);
   $("#fields").innerHTML=html; $("#editor").showModal();
 }
 $("#close").onclick=$("#cancel").onclick=()=>$("#editor").close();
-$("#new-portfolio").onclick=()=>editor("portfolio"); $("#new-video").onclick=()=>editor("videos"); $("#new-brand").onclick=()=>editor("brands"); $("#new-package").onclick=()=>editor("packages");
+$("#new-portfolio").onclick=()=>editor("portfolio"); $("#new-video").onclick=()=>editor("videos"); $("#new-brand").onclick=()=>editor("brands"); $("#new-social").onclick=()=>editor("socialBrands"); $("#new-package").onclick=()=>editor("packages");
 $("#editor-form").addEventListener("submit",async e=>{
   e.preventDefault(); if(S.busy)return; S.busy=true;
   const form=e.currentTarget, submit=form.querySelector('button[type="submit"]')||form.querySelector('footer button:last-child');
@@ -283,6 +301,19 @@ $("#editor-form").addEventListener("submit",async e=>{
       else if(item?.logoUrl){data.logoUrl=item.logoUrl;data.logoHash=item.logoHash||null;}
       else throw new Error("Selecciona el logotipo de la marca.");
     }
+    if(kind==="socialBrands") {
+      data.name=String(f.get("name")||"").trim();data.description=String(f.get("description")||"").trim();data.profileUrl=String(f.get("profileUrl")||"").trim();
+      const duplicate=S.data.socialBrands.find(x=>x.id!==item?.id&&normalize(x.name)===normalize(data.name));if(duplicate)throw new Error("Esta marca digital ya está registrada.");
+      let logoUrl=item?.logoUrl||"";const logo=f.get("socialLogo");if(logo?.size)logoUrl=await uploadToCloudinary(logo,"social-brands/logos");data.logoUrl=logoUrl;
+      const numberField=name=>{const raw=String(f.get(name)||"").trim();if(raw==="")return 0;const n=Number(raw);if(!Number.isFinite(n)||n<0)throw new Error(`El campo ${name} debe ser un número igual o mayor que cero.`);return n;};
+      data.stats={followers:numberField("followers"),reach:numberField("reach"),interactions:numberField("interactions"),views:numberField("views"),period:String(f.get("period")||"").trim(),updatedAt:String(f.get("updatedAtText")||"").trim()};
+      data.history=String(f.get("history")||"").split(/\r?\n/).map(line=>line.trim()).filter(Boolean).map(line=>{const [month,followers,reach,interactions,views]=line.split("|").map(x=>x.trim());if(!/^\d{4}-\d{2}$/.test(month)||![followers,reach,interactions,views].every(v=>v===""||Number.isFinite(Number(v))&&Number(v)>=0))throw new Error(`Línea de evolución inválida: ${line}`);return {month,followers:Number(followers||0),reach:Number(reach||0),interactions:Number(interactions||0),views:Number(views||0)};});
+      if(data.history.length>24)throw new Error("Registra como máximo 24 meses de evolución por marca.");
+      data.posts=String(f.get("posts")||"").split(/\r?\n/).map(line=>line.trim()).filter(Boolean).map(line=>{const [type,title,url,reach,views,interactions]=line.split("|").map(x=>x.trim());if(!type||!title||!url)throw new Error(`Publicación inválida: ${line}. Usa tipo|título|URL y, opcionalmente, alcance|reproducciones|interacciones.`);if(!/^https:\/\//i.test(url))throw new Error(`La URL de esta publicación no es válida: ${url}`);const post={type,title,url};for(const [key,value] of [["reach",reach],["views",views],["interactions",interactions]])if(value!==undefined&&value!==""){const n=Number(value);if(!Number.isFinite(n)||n<0)throw new Error(`Métrica inválida en la publicación: ${line}`);post[key]=n;}return post;});
+      if(data.posts.length>30)throw new Error("Registra como máximo 30 publicaciones por marca para mantener la página ligera.");
+      const mediaFiles=Array.from(f.getAll("socialMedia")).filter(x=>x instanceof File&&x.size);if(data.posts.length+mediaFiles.length>30)throw new Error("El máximo es de 30 publicaciones por marca. Guarda los cambios y agrega el resto después.");for(const file of mediaFiles){const url=await uploadToCloudinary(file,"social-brands/content");data.posts.push({type:"Diseño / fotografía",title:file.name,url,mediaUrl:url});}
+      if(data.profileUrl&&!/^https:\/\//i.test(data.profileUrl))throw new Error("El enlace del perfil debe comenzar con https://.");
+    }
     if(kind==="packages") {
       data.name=String(f.get("name")||"").trim(); data.category=String(f.get("category")||"").trim(); data.price=Number(f.get("price"));
       data.description=String(f.get("description")||"").trim(); data.features=String(f.get("features")||"").split("\n").map(x=>x.trim()).filter(Boolean);
@@ -293,7 +324,7 @@ $("#editor-form").addEventListener("submit",async e=>{
     await saveRecord(kind,item,data);
     $("#editor").close(); note("Registro guardado correctamente.");
     await rows(kind,true);
-    ({portfolio:drawPortfolio,videos:drawVideos,brands:drawBrands,packages:drawPackages}[kind])();
+    ({portfolio:drawPortfolio,videos:drawVideos,brands:drawBrands,socialBrands:drawSocialBrands,packages:drawPackages}[kind])();
     await overview();
   } catch(err){console.error(err);note(readableError(err));}
   finally{S.busy=false;if(submit){submit.disabled=false;submit.textContent="Guardar";}}
@@ -305,14 +336,15 @@ function bindCards(){
   document.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{
     if(!confirm("¿Eliminar este registro? Esta acción no se puede deshacer."))return;
     b.disabled=true;
-    try{await deleteDoc(doc(db,b.dataset.del,b.dataset.id));await rows(b.dataset.del,true);({portfolio:drawPortfolio,videos:drawVideos,brands:drawBrands,packages:drawPackages}[b.dataset.del])();await overview();note("Registro eliminado.");}
+    try{await deleteDoc(doc(db,b.dataset.del,b.dataset.id));await rows(b.dataset.del,true);({portfolio:drawPortfolio,videos:drawVideos,brands:drawBrands,socialBrands:drawSocialBrands,packages:drawPackages}[b.dataset.del])();await overview();note("Registro eliminado.");}
     catch(err){console.error(err);note(readableError(err));b.disabled=false;}
   });
 }
 function drawPortfolio(){const a=S.data.portfolio;$("#portfolio-list").innerHTML=a.map(x=>`<article class="card">${(x.coverUrl||x.mediaUrl)?`<img src="${esc(x.coverUrl||x.mediaUrl)}" alt="${esc(x.title)}" loading="lazy" decoding="async">`:""}<h3>${esc(x.title)}</h3><p>${esc(x.category)} · ${Number(x.galleryCount??x.galleryImages?.length??0)} fotografías · ${x.published?"Publicado":"Oculto"}</p>${cardActions("portfolio",x.id)}</article>`).join("")||"Sin eventos todavía.";bindCards();}
 function drawVideos(){const a=S.data.videos;$("#videos-list").innerHTML=a.map(x=>`<article class="card"><a class="video-admin-thumb" href="${esc(x.youtubeUrl||`https://www.youtube.com/watch?v=${x.youtubeId||""}`)}" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/${encodeURIComponent(x.youtubeId||"")}/hqdefault.jpg" alt="Miniatura de ${esc(x.title)}" loading="lazy" decoding="async"><span>▶</span></a><h3>${esc(x.title)}</h3><p>${esc(x.category)} · ${x.published?"Publicado":"Oculto"}</p><a class="video-admin-link" href="${esc(x.youtubeUrl||`https://www.youtube.com/watch?v=${x.youtubeId||""}`)}" target="_blank" rel="noopener">Ver en YouTube ↗</a>${cardActions("videos",x.id)}</article>`).join("")||"Todavía no has agregado videos.";bindCards();}
 function drawBrands(){const a=S.data.brands;$("#brands-list").innerHTML=a.map(x=>`<article class="card"><img src="${esc(x.logoUrl||"")}" alt="${esc(x.name)}" loading="lazy" decoding="async"><h3>${esc(x.name)}</h3><p>${x.published?"Publicado":"Oculto"}</p>${cardActions("brands",x.id)}</article>`).join("")||"Sin marcas.";bindCards();}
-function drawPackages(){const a=S.data.packages;$("#packages-list").innerHTML=a.map(x=>`<article class="card"><h3>${esc(x.name)}</h3><b>$${Number(x.price||0).toFixed(2)} desde</b><p>${esc(x.description)}</p><ul>${(x.features||[]).map(y=>`<li>${esc(y)}</li>`).join("")}</ul><p>${x.published?"Publicado":"Oculto"}</p>${cardActions("packages",x.id)}</article>`).join("")||"Sin paquetes.";bindCards();}
+function drawSocialBrands(){const a=S.data.socialBrands;$("#social-list").innerHTML=a.map(x=>`<article class="card">${x.logoUrl?`<img src="${esc(x.logoUrl)}" alt="${esc(x.name)}">`:""}<h3>${esc(x.name)}</h3><p>${Number(x.stats?.followers||0).toLocaleString("es-EC")} seguidores · ${Number(x.posts?.length||0)} publicaciones</p><p>${x.published?"Publicado":"Oculto"}</p>${cardActions("socialBrands",x.id)}</article>`).join("")||"Todavía no has registrado marcas de gestión digital.";bindCards();}
+function drawPackages(){const a=S.data.packages;$("#packages-list").innerHTML=a.map(x=>`<article class="card"><h3>${esc(x.name)}</h3><p class="package-admin-category">${esc(x.category||"Sin categoría")}</p><b>$${Number(x.price||0).toLocaleString("es-EC",{minimumFractionDigits:2,maximumFractionDigits:2})} desde</b><p>${esc(x.description)}</p><ul>${(x.features||[]).map(y=>`<li>${esc(y)}</li>`).join("")}</ul><p>${x.published?"Publicado":"Oculto"}</p>${cardActions("packages",x.id)}</article>`).join("")||"Sin paquetes.";bindCards();}
 async function drawMessages(){const all=await rows("messages",true),filter=$("#message-filter").value,a=all.filter(x=>filter==="all"||(x.status||"new")===filter);$("#messages-list").innerHTML=a.map(x=>`<article class="message"><b>${esc(x.name||"Sin nombre")}</b> · ${esc(x.email||"")} · ${esc(x.phone||"")}<p>${esc(x.message||"")}</p><small>${esc(x.status||"new")}</small><div class="actions"><button type="button" data-read="${esc(x.id)}">Marcar leído</button><button type="button" data-replied="${esc(x.id)}">Respondido</button>${x.phone?`<a href="https://wa.me/${String(x.phone).replace(/\D/g,"")}" target="_blank" rel="noopener">WhatsApp</a>`:""}</div></article>`).join("")||"Sin mensajes.";
   document.querySelectorAll("[data-read],[data-replied]").forEach(b=>b.onclick=async()=>{b.disabled=true;const id=b.dataset.read||b.dataset.replied;try{await updateDoc(doc(db,"messages",id),{status:b.dataset.read?"read":"replied"});await drawMessages();await overview();}catch(err){console.error(err);note(readableError(err));b.disabled=false;}});
 }

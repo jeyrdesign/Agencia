@@ -30,3 +30,28 @@ No se ejecutó una sesión real en el dominio publicado ni se pudo confirmar el 
 - La portada muestra cuatro miniaturas de categorías (diseño/branding, fotografía, audiovisual y comunicación digital). Cada miniatura abre la categoría correspondiente.
 - En móviles, las miniaturas se presentan en una columna, con proporción vertical 4:5 y `object-fit: cover` para conservar dimensiones sin deformación.
 - La página de portafolio completo conserva el filtro general y todas las categorías disponibles.
+
+
+## Ajustes de galería y filtros (18-11-2026)
+- Las miniaturas dentro de cada proyecto conservan la proporción intrínseca de cada fotografía: altura automática, sin recorte ni deformación, tanto en escritorio como en móvil. En celulares se muestran en una sola columna, manteniendo el formato horizontal original de las imágenes.
+- Los filtros se muestran únicamente en el listado del portafolio completo. Se ocultan de forma efectiva en las galerías individuales de proyectos y en las páginas de detalle de videos.
+- Se corrigió la prioridad del atributo `hidden` frente al estilo `display:flex`, que podía dejar visible el grupo de filtros incluso cuando se solicitaba ocultarlo.
+- En móvil, los filtros del portafolio completo se desplazan horizontalmente para evitar que ocupen demasiadas filas.
+- Al seleccionar una categoría en el portafolio completo, la selección se conserva en la URL para permitir recargar o compartir el filtro aplicado.
+
+
+## Gestión digital, paquetes y ajustes visuales (21-11-2026)
+- La cuarta tarjeta de servicios ahora representa **Gestión de redes + creación de contenidos**. Pulsar el cuerpo de la tarjeta abre el espacio de marcas; el enlace interior abre los paquetes y precios, manteniendo dos destinos separados.
+- Se añadió `gestion-digital.html`: lista las marcas publicadas y abre una ficha individual con seguidores, alcance, interacciones, reproducciones, periodo y fecha de actualización, evolución mensual y publicaciones.
+- Se añadió `Administración > Gestión digital`, con alta/edición/eliminación y publicación de marcas, estadísticas manuales, historial mensual, enlaces de Reels/YouTube con métricas individuales opcionales de alcance, reproducciones e interacciones, y carga de fotografías/diseños a Cloudinary. Los datos de estadísticas son manuales, no se consultan automáticamente desde Instagram.
+- La nueva colección Firestore es `socialBrands`. La regla incluida permite lectura pública solo a documentos publicados y escritura únicamente al administrador propietario. **Esta regla debe publicarse en Firebase Console > Firestore Database > Rules** antes de activar la sección.
+- Los paquetes conservan la colección `packages`. Se añadió la categoría canónica `Gestión de redes + creación de contenidos`, manteniendo compatibilidad con registros antiguos de `Paquetes Digitales` y `Comunicación digital`.
+- Los precios publicados se muestran en la tarjeta 04 de la página principal, en las tarjetas del índice de paquetes y en la ficha de cada paquete. El administrador muestra categoría y precio y permite editarlos desde el mismo registro.
+- El holograma del hero se rediseñó como una proyección técnica de lente/diafragma fotográfico con interfaz y retícula, en lugar de una composición basada principalmente en halos. Los tres avatares de prueba se reemplazaron por símbolos SVG de diseño, fotografía y vídeo en la paleta JEYR.
+
+## Verificación de esta entrega
+- Sintaxis de los archivos JavaScript comprobada con Node.js en modo módulo.
+- HTML de las 10 páginas analizado; sin IDs duplicados ni referencias locales rotas.
+- SVG del holograma, favicon y logotipo comprobados como XML válido.
+- Balance de llaves de los archivos CSS comprobado.
+- Se intentó una prueba de navegación con Chromium local, pero el entorno bloqueó la navegación del navegador a `127.0.0.1` (`ERR_BLOCKED_BY_ADMINISTRATOR`). Por ello no se declara una prueba real de navegador, ni se afirma que Firebase/Cloudinary hayan sido verificados en producción. La conexión real depende de publicar las reglas actualizadas y probar con el proyecto Firebase existente.
