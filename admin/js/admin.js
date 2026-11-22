@@ -209,8 +209,10 @@ function editor(kind,item=null) {
     <label class="wide">Enlace de YouTube<input name="youtubeUrl" type="url" required placeholder="https://www.youtube.com/watch?v=..." value="${esc(item?.youtubeUrl)}"></label>
     <p class="hint wide">Acepta enlaces de YouTube normales, Shorts y youtu.be. El video debe estar Público o No listado para poder reproducirse en la web.</p>
     <label class="wide">Descripción<textarea name="description" maxlength="1200">${esc(item?.description)}</textarea></label>
+    <label class="wide">Imagen de miniatura para la categoría<input name="categoryCover" type="file" accept="image/png,image/jpeg,image/webp"></label>
+    ${item?.categoryCoverUrl?`<div class="wide category-cover-preview"><img src="${esc(item.categoryCoverUrl)}" alt="Miniatura audiovisual actual"><span>Miniatura personalizada actual. Si no seleccionas otra imagen, se conservará.</span></div>`:""}
     <label class="wide featured-toggle"><input type="checkbox" name="featured" value="true" ${item?.featured===true?"checked":""}><span>Usar esta miniatura en la categoría «Producción audiovisual» del panel inicial</span></label>
-    <p class="hint wide">Al activar esta opción, la miniatura automática de YouTube se utilizará en la tarjeta de Producción audiovisual del inicio. El video seguirá apareciendo en el portafolio completo.</p>
+    <p class="hint wide">Si subes una imagen y activas esta opción, se usará esa imagen en la tarjeta inicial. Si no subes una, se utilizará la miniatura automática de YouTube. El video seguirá apareciendo en el portafolio completo.</p>
     <label>Publicado<select name="published"><option value="true" ${item?.published!==false?"selected":""}>Sí</option><option value="false" ${item?.published===false?"selected":""}>No</option></select></label>`;
   if(kind==="brands") html=`
     <label>Nombre de la marca<input name="name" required maxlength="100" value="${esc(item?.name)}"></label>
@@ -242,7 +244,11 @@ function editor(kind,item=null) {
     <label>Precio desde USD<input name="price" type="number" min="0" step=".01" required value="${esc(item?.price)}"></label>
     <label>Publicado<select name="published"><option value="true" ${item?.published!==false?"selected":""}>Sí</option><option value="false" ${item?.published===false?"selected":""}>No</option></select></label>
     <label class="wide">Descripción<textarea name="description" maxlength="1200">${esc(item?.description)}</textarea></label>
-    <label class="wide">Incluye (una línea por elemento)<textarea name="features">${esc((item?.features||[]).join("\n"))}</textarea></label>`;
+    <label class="wide">Incluye (una línea por elemento)<textarea name="features">${esc((item?.features||[]).join("\n"))}</textarea></label>
+    <label class="wide">Imagen de miniatura para Gestión de redes / Comunicación digital<input name="categoryCover" type="file" accept="image/png,image/jpeg,image/webp"></label>
+    ${item?.categoryCoverUrl?`<div class="wide category-cover-preview"><img src="${esc(item.categoryCoverUrl)}" alt="Miniatura digital actual"><span>Miniatura personalizada actual. Si no seleccionas otra imagen, se conservará.</span></div>`:""}
+    <label class="wide featured-toggle"><input type="checkbox" name="categoryFeatured" value="true" ${item?.categoryFeatured===true?"checked":""}><span>Usar esta imagen como miniatura de la categoría en el panel inicial</span></label>
+    <p class="hint wide">Esta opción se aplica cuando la categoría del paquete es «Gestión de redes + creación de contenidos». La miniatura es independiente de las imágenes y publicaciones de cada marca.</p>`;
   $("#editor-title").textContent=(item?"Editar ":"Nuevo ")+({portfolio:"proyecto",videos:"video de YouTube",brands:"marca",socialBrands:"marca digital",packages:"paquete"}[kind]);
   $("#fields").innerHTML=html; $("#editor").showModal();
 }
@@ -289,6 +295,9 @@ $("#editor-form").addEventListener("submit",async e=>{
       data.category=String(f.get("category")||"Producción audiovisual").trim();
       data.description=String(f.get("description")||"").trim();
       data.featured=f.get("featured")==="true";
+      const categoryCover=f.get("categoryCover");
+      data.categoryCoverUrl=item?.categoryCoverUrl||"";
+      if(categoryCover?.size) data.categoryCoverUrl=await uploadToCloudinary(categoryCover,"category-covers/audiovisual");
       const suppliedUrl=String(f.get("youtubeUrl")||"").trim();
       const youtubeId=parseYouTubeId(suppliedUrl);
       if(!youtubeId) throw new Error("El enlace no parece ser un video válido de YouTube. Comprueba la URL.");
@@ -322,7 +331,12 @@ $("#editor-form").addEventListener("submit",async e=>{
     if(kind==="packages") {
       data.name=String(f.get("name")||"").trim(); data.category=String(f.get("category")||"").trim(); data.price=Number(f.get("price"));
       data.description=String(f.get("description")||"").trim(); data.features=String(f.get("features")||"").split("\n").map(x=>x.trim()).filter(Boolean);
+      data.categoryFeatured=f.get("categoryFeatured")==="true";
+      data.categoryCoverUrl=item?.categoryCoverUrl||"";
+      const categoryCover=f.get("categoryCover");
+      if(categoryCover?.size) data.categoryCoverUrl=await uploadToCloudinary(categoryCover,"category-covers/digital");
       if(!Number.isFinite(data.price)||data.price<0) throw new Error("El precio debe ser un número válido mayor o igual a cero.");
+      if(data.categoryFeatured&&normalize(data.category).includes("gestion de redes")&&!data.categoryCoverUrl) throw new Error("Sube una imagen de miniatura antes de activar esta opción.");
       const key=duplicateKey(kind,data), local=S.data.packages.find(x=>x.id!==item?.id&&duplicateKey(kind,x)===key);
       if(local) throw new Error("Ya existe un paquete con ese nombre en esta categoría. Edita el existente.");
     }
@@ -346,10 +360,10 @@ function bindCards(){
   });
 }
 function drawPortfolio(){const a=S.data.portfolio;$("#portfolio-list").innerHTML=a.map(x=>`<article class="card">${(x.coverUrl||x.mediaUrl)?`<img src="${esc(x.coverUrl||x.mediaUrl)}" alt="${esc(x.title)}" loading="lazy" decoding="async">`:""}<h3>${esc(x.title)}</h3><p>${esc(x.category)} · ${Number(x.galleryCount??x.galleryImages?.length??0)} fotografías · ${x.published?"Publicado":"Oculto"}</p><p>${x.featured?"★ Seleccionado para Trabajo seleccionado":"No destacado"}</p>${cardActions("portfolio",x.id)}</article>`).join("")||"Sin eventos todavía.";bindCards();}
-function drawVideos(){const a=S.data.videos;$("#videos-list").innerHTML=a.map(x=>`<article class="card"><a class="video-admin-thumb" href="${esc(x.youtubeUrl||`https://www.youtube.com/watch?v=${x.youtubeId||""}`)}" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/${encodeURIComponent(x.youtubeId||"")}/hqdefault.jpg" alt="Miniatura de ${esc(x.title)}" loading="lazy" decoding="async"><span>▶</span></a><h3>${esc(x.title)}</h3><p>${esc(x.category)} · ${x.published?"Publicado":"Oculto"}${x.featured?" · ★ Miniatura de categoría en inicio":""}</p><a class="video-admin-link" href="${esc(x.youtubeUrl||`https://www.youtube.com/watch?v=${x.youtubeId||""}`)}" target="_blank" rel="noopener">Ver en YouTube ↗</a>${cardActions("videos",x.id)}</article>`).join("")||"Todavía no has agregado videos.";bindCards();}
+function drawVideos(){const a=S.data.videos;$("#videos-list").innerHTML=a.map(x=>`<article class="card"><a class="video-admin-thumb" href="${esc(x.youtubeUrl||`https://www.youtube.com/watch?v=${x.youtubeId||""}`)}" target="_blank" rel="noopener"><img src="${esc(x.categoryCoverUrl||`https://img.youtube.com/vi/${encodeURIComponent(x.youtubeId||"")}/hqdefault.jpg`)}" alt="Miniatura de ${esc(x.title)}" loading="lazy" decoding="async"><span>▶</span></a><h3>${esc(x.title)}</h3><p>${esc(x.category)} · ${x.published?"Publicado":"Oculto"}${x.featured?" · ★ Miniatura de categoría en inicio":""}${x.categoryCoverUrl?" · Portada personalizada":""}</p><a class="video-admin-link" href="${esc(x.youtubeUrl||`https://www.youtube.com/watch?v=${x.youtubeId||""}`)}" target="_blank" rel="noopener">Ver en YouTube ↗</a>${cardActions("videos",x.id)}</article>`).join("")||"Todavía no has agregado videos.";bindCards();}
 function drawBrands(){const a=S.data.brands;$("#brands-list").innerHTML=a.map(x=>`<article class="card"><img src="${esc(x.logoUrl||"")}" alt="${esc(x.name)}" loading="lazy" decoding="async"><h3>${esc(x.name)}</h3><p>${x.published?"Publicado":"Oculto"}</p>${cardActions("brands",x.id)}</article>`).join("")||"Sin marcas.";bindCards();}
 function drawSocialBrands(){const a=S.data.socialBrands;$("#social-list").innerHTML=a.map(x=>`<article class="card">${x.logoUrl?`<img src="${esc(x.logoUrl)}" alt="${esc(x.name)}">`:""}<h3>${esc(x.name)}</h3><p>${Number(x.stats?.followers||0).toLocaleString("es-EC")} seguidores · ${Number(x.posts?.length||0)} publicaciones</p><p>${x.published?"Publicado":"Oculto"}</p>${cardActions("socialBrands",x.id)}</article>`).join("")||"Todavía no has registrado marcas de gestión digital.";bindCards();}
-function drawPackages(){const a=S.data.packages;$("#packages-list").innerHTML=a.map(x=>`<article class="card"><h3>${esc(x.name)}</h3><p class="package-admin-category">${esc(x.category||"Sin categoría")}</p><b>$${Number(x.price||0).toLocaleString("es-EC",{minimumFractionDigits:2,maximumFractionDigits:2})} desde</b><p>${esc(x.description)}</p><ul>${(x.features||[]).map(y=>`<li>${esc(y)}</li>`).join("")}</ul><p>${x.published?"Publicado":"Oculto"}</p>${cardActions("packages",x.id)}</article>`).join("")||"Sin paquetes.";bindCards();}
+function drawPackages(){const a=S.data.packages;$("#packages-list").innerHTML=a.map(x=>`<article class="card">${x.categoryCoverUrl?`<img src="${esc(x.categoryCoverUrl)}" alt="Miniatura de ${esc(x.category||x.name)}" loading="lazy" decoding="async">`:""}<h3>${esc(x.name)}</h3><p class="package-admin-category">${esc(x.category||"Sin categoría")}</p><b>$${Number(x.price||0).toLocaleString("es-EC",{minimumFractionDigits:2,maximumFractionDigits:2})} desde</b><p>${esc(x.description)}</p><ul>${(x.features||[]).map(y=>`<li>${esc(y)}</li>`).join("")}</ul><p>${x.published?"Publicado":"Oculto"}${x.categoryFeatured?" · ★ Miniatura de categoría en inicio":""}</p>${cardActions("packages",x.id)}</article>`).join("")||"Sin paquetes.";bindCards();}
 async function drawMessages(){const all=await rows("messages",true),filter=$("#message-filter").value,a=all.filter(x=>filter==="all"||(x.status||"new")===filter);$("#messages-list").innerHTML=a.map(x=>`<article class="message"><b>${esc(x.name||"Sin nombre")}</b> · ${esc(x.email||"")} · ${esc(x.phone||"")}<p>${esc(x.message||"")}</p><small>${esc(x.status||"new")}</small><div class="actions"><button type="button" data-read="${esc(x.id)}">Marcar leído</button><button type="button" data-replied="${esc(x.id)}">Respondido</button>${x.phone?`<a href="https://wa.me/${String(x.phone).replace(/\D/g,"")}" target="_blank" rel="noopener">WhatsApp</a>`:""}</div></article>`).join("")||"Sin mensajes.";
   document.querySelectorAll("[data-read],[data-replied]").forEach(b=>b.onclick=async()=>{b.disabled=true;const id=b.dataset.read||b.dataset.replied;try{await updateDoc(doc(db,"messages",id),{status:b.dataset.read?"read":"replied"});await drawMessages();await overview();}catch(err){console.error(err);note(readableError(err));b.disabled=false;}});
 }

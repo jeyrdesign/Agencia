@@ -448,3 +448,32 @@ a[role="link"]:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
 /* Icono de pantalla para Diseño gráfico & branding */
 .service-design-icon{width:46px;height:46px;display:grid;place-items:center;color:#5ee5f1}
 .service-design-icon svg{width:42px;height:42px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 9px rgba(0,191,255,.22))}
+
+
+/* Sistema unificado de iconos de las cuatro categorías de servicios */
+.service-card .service-icon{
+  width:46px;
+  height:46px;
+  min-width:46px;
+  display:grid;
+  place-items:center;
+  margin:25px 0 20px;
+  color:#00BFFF;
+  font-size:42px;
+  line-height:1;
+}
+.service-card .service-icon svg{
+  display:block;
+  width:42px;
+  height:42px;
+  min-width:42px;
+  min-height:42px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  filter:drop-shadow(0 0 8px rgba(0,191,255,.22));
+}
+.service-card .service-icon svg rect:nth-of-type(2){fill:rgba(0,191,255,.08)}
+.service-card .service-design-icon,.service-card .service-social-icon{color:#00BFFF}

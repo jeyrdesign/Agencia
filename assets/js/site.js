@@ -77,7 +77,7 @@ function projectMatchesPreviewCategory(item, category) {
   const text = normalize(`${item.category||""} ${item.title||""} ${item.description||""}`);
   return category.terms.some(term => text.includes(normalize(term)));
 }
-function renderPortfolio(items) {
+function renderPortfolio(items, packageItems=[]) {
   const grid = $("#portfolio-grid");
   if (!grid) return;
   const uniqueItems = uniqueBy(items, x => `${normalize(x.title)}|${normalize(x.category)}`);
@@ -87,9 +87,16 @@ function renderPortfolio(items) {
   // un proyecto destacado de esa categoría; si no existe, usa el más reciente.
   grid.innerHTML = portfolioPreviewCategories.map((category,index) => {
     const matching = uniqueItems.filter(item => projectMatchesPreviewCategory(item,category));
-    const project = matching.find(item => item.featured === true && (item.coverUrl || item.mediaUrl || item.imageUrl || item.youtubeId))
+    const project = matching.find(item => item.featured === true && (item.categoryCoverUrl || item.coverUrl || item.mediaUrl || item.imageUrl || item.youtubeId))
       || matching.find(item => item.coverUrl || item.mediaUrl || item.imageUrl || item.youtubeId);
-    const cover = project?.coverUrl || project?.mediaUrl || project?.imageUrl || (project?.youtubeId ? `https://img.youtube.com/vi/${encodeURIComponent(project.youtubeId)}/hqdefault.jpg` : "");
+    const latestFirst = (a,b) => ((b.updatedAt?.toMillis?.() || b.createdAt?.toMillis?.() || 0) - (a.updatedAt?.toMillis?.() || a.createdAt?.toMillis?.() || 0));
+    const digitalCover = category.key === "digitales"
+      ? packageItems.filter(item => item.categoryFeatured === true && normalize(item.category).includes("gestion de redes") && item.categoryCoverUrl).sort(latestFirst)[0]?.categoryCoverUrl
+      : "";
+    const audiovisualCover = category.key === "audiovisual"
+      ? items.filter(item => item.featured === true && normalize(item.category).includes("produccion audiovisual") && item.categoryCoverUrl).sort(latestFirst)[0]?.categoryCoverUrl
+      : "";
+    const cover = digitalCover || audiovisualCover || project?.categoryCoverUrl || project?.coverUrl || project?.mediaUrl || project?.imageUrl || (project?.youtubeId ? `https://img.youtube.com/vi/${encodeURIComponent(project.youtubeId)}/hqdefault.jpg` : "");
     const target = `galeria.html?categoria=${encodeURIComponent(category.key)}`;
     const image = cover
       ? `<img src="${esc(optimizedImage(cover,760))}" alt="Miniatura de ${esc(category.label)}" loading="lazy" decoding="async">`
@@ -145,6 +152,6 @@ $("#contact-form").addEventListener("submit", async (e) => {
 });
 (async function init(){
   track("page_view");
-  const [portfolioItems,videoItems] = await Promise.all([getPublished("portfolio"),getPublished("videos")]);
-  await Promise.all([loadSettings(), Promise.resolve(renderPortfolio([...portfolioItems,...videoItems])), getPublished("brands").then(renderBrands)]);
+  const [portfolioItems,videoItems,packageItems] = await Promise.all([getPublished("portfolio"),getPublished("videos"),getPublished("packages")]);
+  await Promise.all([loadSettings(), Promise.resolve(renderPortfolio([...portfolioItems,...videoItems],packageItems)), getPublished("brands").then(renderBrands)]);
 })();

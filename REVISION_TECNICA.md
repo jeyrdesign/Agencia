@@ -63,3 +63,11 @@ No se ejecutó una sesión real en el dominio publicado ni se pudo confirmar el 
 - La tarjeta 04 de la página principal ya no consulta ni muestra precios de paquetes. El enlace «Ver paquetes y precios» conserva su destino a la página de paquetes digitales.
 - En Administración > Portafolio se añadió la opción «Mostrar este proyecto en 03 / TRABAJO SELECCIONADO». La página principal muestra hasta cuatro proyectos seleccionados y enlaza cada miniatura a su galería individual. Si todavía no hay proyectos seleccionados, se conserva la vista previa de categorías como alternativa.
 - Las miniaturas de «Trabajo seleccionado» y de la vista previa conservan la proporción original de las portadas: ancho adaptable, altura automática y sin recorte ni estiramiento.
+
+
+## Ajuste de iconografía de categorías (22-11-2026)
+- Los cuatro iconos de las tarjetas de servicios usan el mismo color de marca (cian `#00BFFF`), eliminando el tono menta.
+- Se normalizaron los contenedores a 46 × 46 px y los dibujos SVG a 42 × 42 px, con el mismo grosor de trazo y tratamiento visual.
+- Fotografía y Producción audiovisual ahora usan SVG para igualar el tamaño óptico de los iconos de Diseño y Gestión de redes.
+- No se modificaron los textos, destinos ni comportamiento de las tarjetas.
+- Verificación realizada: sintaxis JS, estructura HTML, balance CSS e integridad del ZIP. No se realizó prueba visual en navegador ni prueba de producción.

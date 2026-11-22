@@ -16,3 +16,5 @@ button,input,textarea,select{min-height:42px}input[type=file]{padding:9px;backgr
 .package-admin-category{display:inline-block!important;color:#72dcec!important;font-size:10px!important;letter-spacing:.08em;text-transform:uppercase;margin:4px 0 2px!important}
 
 .form label.featured-toggle{display:flex;align-items:center;gap:10px}.form label.featured-toggle input{width:18px;min-width:18px;min-height:18px;padding:0;accent-color:#00bfff}.form label.featured-toggle span{line-height:1.5}
+
+.category-cover-preview{display:flex;align-items:center;gap:12px;padding:10px;border:1px solid #29465d;border-radius:10px;background:#081522}.category-cover-preview img{width:112px;height:72px;object-fit:cover;border-radius:7px;flex:0 0 auto}.category-cover-preview span{font-size:12px;color:#9bb0c4;line-height:1.45}

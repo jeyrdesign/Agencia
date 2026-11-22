@@ -23,6 +23,7 @@ Consulta `REVISION_TECNICA.md` para conocer las comprobaciones y sus límites.
 - El panel `Administración > Gestión digital` permite registrar estadísticas manuales, evolución mensual, enlaces a Reels/YouTube y fotos/diseños en Cloudinary.
 - Debe publicarse la regla `socialBrands` de `firebase/firestore.rules` en Firebase Console para permitir lectura pública de marcas publicadas y escritura exclusiva del administrador.
 - Los precios públicos se leen de la colección `packages`; administra nombre, categoría, precio y estado de publicación desde `Administración > Servicios y paquetes`.
+- Para mantener uniformes las tarjetas de categorías del inicio, puedes subir una miniatura personalizada desde la edición de un video de YouTube (Producción audiovisual) o desde un paquete de «Gestión de redes + creación de contenidos»; activa la casilla para usarla en la categoría inicial. Las imágenes se guardan en Cloudinary y no reemplazan ni modifican el contenido del portafolio.
 
 
 ## Paso obligatorio de Firebase para Gestión digital
